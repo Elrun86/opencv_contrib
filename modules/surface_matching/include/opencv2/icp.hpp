@@ -56,11 +56,11 @@ namespace cv
 	namespace ppf_match_3d 
 	{
 		/**
-		* @class PPF3DDetector
-		* @brief Class, allowing ICP Registration of 3D Shapes
+		* @class ICP
+		* @brief Class, allowing ICP Registration of 3D Shapes using Iterative Closest Point
 		* Typical Use:
 		*
-		*   // Train a model
+		*   // Create an ICP instance
 		*   ppf_match_3d::ICP icp(200, 0.005, 3, 8);
 		*	// Register for all selected poses. Writes back on results ( vector < Pose3D* > )
 		* 	icp.registerModelToScene(pc, pcTest, results); 
