@@ -1,5 +1,5 @@
 **************************
-rgbd. RGB-Depth Processing
+surface_matching. Matching Surface Models Across 3D Scenes
 **************************
 
 .. highlight:: cpp
