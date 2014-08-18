@@ -39,8 +39,6 @@
 // Author: Tolga Birdal
 
 #include "precomp.hpp"
-#include "ppf_helpers.hpp"
-#include "c_utils.hpp"
 #include <time.h>
 #include <fstream>
 #include <vector>

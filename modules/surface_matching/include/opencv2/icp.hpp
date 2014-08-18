@@ -53,11 +53,10 @@
 #if CV_MAJOR_VERSION > 2
 #include <opencv2/core/utility.hpp>
 #else
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 #endif
 
-#include "pose_3d.hpp"
-#include "c_utils.hpp"
+#include "surface_matching/pose_3d.hpp"
 #include <vector>
 
 using namespace std;

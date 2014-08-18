@@ -41,7 +41,7 @@
 #ifndef __OPENCV_PPF_3D_HELPERS_HPP__
 #define __OPENCV_PPF_3D_HELPERS_HPP__
 
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 
 namespace cv
 {

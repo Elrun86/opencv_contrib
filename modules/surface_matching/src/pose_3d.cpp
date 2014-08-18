@@ -40,15 +40,6 @@
 
 #include "precomp.hpp"
 
-#include <opencv2/core/version.hpp>
-#if CV_MAJOR_VERSION > 2
-#include <opencv2/core/utility.hpp>
-#else
-#include <opencv2/core/core.hpp>
-#endif
-
-#include "pose_3d.hpp"
-
 using namespace std;
 
 namespace cv
@@ -398,4 +389,12 @@ int PoseCluster3D::readPoseCluster(const std::string& FileName)
 }
 }
 
+<<<<<<< HEAD
 }
+=======
+			fclose(f);
+			return status;
+		}
+	}
+}
+>>>>>>> Fixed compilation of module, samples are still broken.

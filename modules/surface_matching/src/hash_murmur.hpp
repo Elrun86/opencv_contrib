@@ -1,3 +1,7 @@
+// Note for OpenCV:
+// Taken from http://code.google.com/p/smhasher/
+// License: MIT
+
 //-----------------------------------------------------------------------------
 // MurmurHash3 was written by Austin Appleby, and is placed in the public
 // domain. The author hereby disclaims copyright to this source code.
@@ -149,5 +153,3 @@ FORCE_INLINE void hashMurmurx86 ( const void * key, int len, int seed, void * ou
 
 }
 };
-
-#endif

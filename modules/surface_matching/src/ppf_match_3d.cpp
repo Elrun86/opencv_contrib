@@ -39,15 +39,9 @@
 // Author: Tolga Birdal
 
 #include "precomp.hpp"
-#include "ppf_match_3d.hpp"
 #include "hash_murmur.hpp"
 
-#if defined (T_OPENMP)
-#include<omp.h>
-#endif
-
-
-namespace cv
+namespace cv 
 {
 namespace ppf_match_3d
 {
@@ -716,4 +710,9 @@ void PPF3DDetector::match(const Mat& pc, vector < Pose3D* >& results, const doub
 
 }
 
+<<<<<<< HEAD
 }
+=======
+	}
+}
+>>>>>>> Fixed compilation of module, samples are still broken.

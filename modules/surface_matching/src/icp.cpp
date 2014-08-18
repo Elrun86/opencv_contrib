@@ -40,15 +40,6 @@
 
 #include "precomp.hpp"
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/calib3d/calib3d.hpp>
-#include <math.h>
-#include "ppf_helpers.hpp"
-//#include "c_utils.hpp"
-#include "pose_3d.hpp"
-#include "icp.hpp"
-#include "t_hash_int.hpp"
-
 using namespace std;
 using namespace cv;
 

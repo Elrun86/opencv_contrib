@@ -42,7 +42,7 @@
 #define _OPENCV_POSE3D_HPP_
 
 #include <vector>
-#include "c_utils.hpp"
+#include <string>
 
 namespace cv
 {
