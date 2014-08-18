@@ -80,7 +80,7 @@ static inline double TNorm3(const double v[])
     return (sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]));
 }
 
-static inline double TNormalize3(double v[])
+static inline void TNormalize3(double v[])
 {
     double normTemp=TNorm3(v);
     if (normTemp>0)
