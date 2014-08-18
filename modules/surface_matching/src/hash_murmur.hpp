@@ -153,3 +153,5 @@ FORCE_INLINE void hashMurmurx86 ( const void * key, int len, int seed, void * ou
 
 }
 };
+
+#endif

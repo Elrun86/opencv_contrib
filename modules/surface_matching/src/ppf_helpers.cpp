@@ -224,12 +224,15 @@ void* indexPCFlann(Mat pc)
     p.eps = 0;
     
     flann_set_distance_type(flann::FLANN_DIST_EUCLIDEAN, 0);
-    
+
+//TODO: figure out why not
+/*
 #if defined (T_OPENMP)
     p.cores = omp_get_num_threads();
 #else
     p.cores = 1;
 #endif
+*/
     
     if (isCont && pc.rows==3)
     {
@@ -292,12 +295,17 @@ void queryPCFlann(void* flannIndex, Mat PC, Mat& Indices, Mat& Distances)
     p.iterations = FLANN_NUM_ITERATIONS;
     p.target_precision = FLANN_TARGET_PRECISION;
     p.leaf_max_size = FLANN_MAX_LEAF_SIZE;
-    p.cores=1;
     p.eps = 0;
+
+//TODO: figure out why not
+/*
 #if defined (T_OPENMP)
     p.cores=8;
     omp_set_num_threads(8);
+#else
+    p.cores=1;
 #endif
+*/
     
     float* dataset;
     if (PC.isContinuous() && PC.rows==3)

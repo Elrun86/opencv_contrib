@@ -101,71 +101,12 @@ typedef struct THash
 */
 class CV_EXPORTS PPF3DDetector
 {
-<<<<<<< HEAD
     public:
     
         /**
-            * \brief Empty constructor. Sets default arguments
-            */
+         * \brief Empty constructor. Sets default arguments
+         */
         PPF3DDetector();
-=======
-  public:
-  
-    /**
-      * \brief Empty constructor. Sets default arguments
-      */
-    PPF3DDetector()
-    {
-      samplingStepRelative = 0.05;
-      distanceStepRelative = 0.05;
-      SceneSampleStep = 1/0.04;
-      angleStepRelative = 30;
-      angleStepRadians = (360.0/angleStepRelative)*M_PI/180.0;
-      angle_step = angleStepRadians;
-      trained = false;
-      
-      SetSearchParams();
-    }
-    
-    /**
-    * Constructor with arguments
-    * @param [in] RelativeSamplingStep Set the sampling distance for the pose refinement relative to the object's diameter. Decreasing this value leads to a more accurate pose refinement but a larger model and slower model generation and refinement. Increasing the value leads to a less accurate pose refinement but a smaller model and faster model generation and matching. Beware of the memory consumption when using large values.
-    * @param [in] RelativeDistanceStep Set the discretization distance of the point pair distance relative to the model's diameter. This value should default to the value of RelativeSamplingStep. For noisy scenes, the value can be increased to improve the robustness of the matching against noisy points.
-    * @param [in] Set the discretization of the point pair orientation as the number of subdivisions of the angle. Increasing the value increases the precision of the matching but decreases the robustness against incorrect normal directions. Decreasing the value decreases the precision of the matching but increases the robustness against incorrect normal directions. For very noisy scenes where the normal directions can not be computed accurately, the value can be set to 25 or 20.
-    */
-    PPF3DDetector(const double RelativeSamplingStep, const double RelativeDistanceStep=0.05, const double NumAngles=30)
-    {
-      samplingStepRelative = RelativeSamplingStep;
-      distanceStepRelative = RelativeDistanceStep;
-      angleStepRelative = NumAngles;
-      angleStepRadians = (360.0/angleStepRelative)*M_PI/180.0;
-      //SceneSampleStep = 1.0/RelativeSceneSampleStep;
-      angle_step = angleStepRadians;
-      trained = false;
-      
-      SetSearchParams();
-    };
-    
-    /**
-    *  Set the parameters for the search    *
-    *  @param [in] numPoses The maximum number of poses to return
-    *  @param [in] positionThreshold Position threshold controlling the similarity of translations. Depends on the units of calibration.
-    *  @param [in] rotationThreshold Position threshold controlling the similarity of rotations. This parameter can be perceived as a threshold over the difference of angles
-    *  @param [in] minMatchScore Not used at the moment
-    *  @param [in] useWeightedClustering The algorithm by default clusters the poses without waiting. A non-zero value would indicate that the pose clustering should take into account the number of votes as the weights and perform a weighted averaging instead of a simple one.
-    *  \return No return value is available.
-    *
-    *  \details Details
-    */
-    void SetSearchParams(const int numPoses=5, const double positionThreshold=-1, const double rotationThreshold=-1, const double minMatchScore=0.5, const bool useWeightedClustering=false)
-    {
-      NumPoses=numPoses;
-      
-      if (positionThreshold<0)
-        PositionThreshold = samplingStepRelative;
-      else
-        PositionThreshold = positionThreshold;
->>>>>>> Fixed compilation of module, samples are still broken.
         
         /**
         * Constructor with arguments

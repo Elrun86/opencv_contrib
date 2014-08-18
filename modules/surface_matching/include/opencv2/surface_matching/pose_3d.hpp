@@ -132,12 +132,12 @@ class CV_EXPORTS PoseCluster3D
             id=0;
         };
         
-        PoseCluster3D(Pose3D* newPose, int id)
+        PoseCluster3D(Pose3D* newPose, int newId)
         {
             //poseList.clear();
             poseList.push_back(newPose);
             this->numVotes = newPose->numVotes;
-            this->id = id;
+            this->id = newId;
         };
         
         virtual ~PoseCluster3D()

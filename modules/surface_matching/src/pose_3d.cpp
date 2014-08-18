@@ -389,12 +389,4 @@ int PoseCluster3D::readPoseCluster(const std::string& FileName)
 }
 }
 
-<<<<<<< HEAD
 }
-=======
-			fclose(f);
-			return status;
-		}
-	}
-}
->>>>>>> Fixed compilation of module, samples are still broken.

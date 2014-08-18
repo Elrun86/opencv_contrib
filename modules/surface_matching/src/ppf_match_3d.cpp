@@ -710,9 +710,4 @@ void PPF3DDetector::match(const Mat& pc, vector < Pose3D* >& results, const doub
 
 }
 
-<<<<<<< HEAD
 }
-=======
-	}
-}
->>>>>>> Fixed compilation of module, samples are still broken.
