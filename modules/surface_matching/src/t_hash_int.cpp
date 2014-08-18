@@ -372,6 +372,7 @@ hashtable_int *hashtableRead(FILE* f)
         
     return hashtbl;
 }
-}
 
-}
+} // namespace ppf_match_3d
+
+} // namespace cv

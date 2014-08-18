@@ -163,8 +163,9 @@ class CV_EXPORTS ICP
         int m_sampleType;
         
 };
-}
-}
 
+} // namespace ppf_match_3d
+
+} // namespace cv
 
 #endif

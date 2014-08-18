@@ -557,6 +557,7 @@ int ICP::registerModelToScene(const Mat& srcPC, const Mat& dstPC, std::vector<Po
     
     return 0;
 }
-}
 
-}
+} // namespace ppf_match_3d
+
+} // namespace cv

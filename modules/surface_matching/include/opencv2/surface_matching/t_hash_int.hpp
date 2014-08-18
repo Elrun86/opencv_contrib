@@ -95,9 +95,9 @@ hashtable_int *hashtableRead(FILE* f);
 int hashtableWrite(const hashtable_int * hashtbl, const size_t dataSize, FILE* f);
 void hashtable_int_print(hashtable_int *hashtbl);
 
+} // namespace ppf_match_3d
 
-}
-}
+} // namespace cv
 #endif
 
 

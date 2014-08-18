@@ -708,6 +708,6 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
     #endif*/
 }
 
-}
+} // namespace ppf_match_3d
 
-}
+} // namespace cv

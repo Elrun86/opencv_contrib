@@ -798,7 +798,9 @@ static inline void eigenLowest33(const double C[3][3], double A[3])
     //A0[2][1] = 1.0;
     A[2] = 1.0;
 }
-}
-}
+
+} // namespace ppf_match_3d
+
+} // namespace cv
 
 #endif

@@ -157,8 +157,8 @@ class CV_EXPORTS PoseCluster3D
         int numVotes;
         int id;
 };
-}
-}
+} // namespace ppf_match_3d
+} // namespace cv
 
 #endif
 

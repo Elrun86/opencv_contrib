@@ -85,7 +85,7 @@ cv::Mat addNoisePC(cv::Mat pc, double scale);
  *  is made, instead the existing memory is overwritten.
  */
 int computeNormalsPC3d(const cv::Mat PC, cv::Mat& PCNormals, const int NumNeighbors, const bool FlipViewpoint, const double viewpoint[3]);
-}
-}
+} // namespace ppf_match_3d
+} // namespace cv
 
 #endif

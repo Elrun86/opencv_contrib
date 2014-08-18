@@ -151,7 +151,7 @@ FORCE_INLINE void hashMurmurx86 ( const void * key, int len, int seed, void * ou
     *(int*)out = h1;
 }
 
-}
-};
+} // namespace ppf_match_3d
+} // namespace cv
 
 #endif

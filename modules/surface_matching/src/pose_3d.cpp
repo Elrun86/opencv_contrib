@@ -385,6 +385,7 @@ int PoseCluster3D::readPoseCluster(const std::string& FileName)
     fclose(f);
     return status;
 }
-}
 
-}
+} // namespace ppf_match_3d
+
+} // namespace cv

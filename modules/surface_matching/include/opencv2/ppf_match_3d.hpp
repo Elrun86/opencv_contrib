@@ -184,8 +184,8 @@ class CV_EXPORTS PPF3DDetector
         
         bool trained;
 };
-};
-};
 
+} // namespace ppf_match_3d
 
+} // namespace cv
 #endif

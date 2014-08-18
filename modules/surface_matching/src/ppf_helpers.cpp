@@ -868,6 +868,6 @@ CV_EXPORTS int computeNormalsPC3d(const Mat PC, Mat& PCNormals, const int NumNei
 }
 
 //////////////////////////////////////// END OF NORMAL COMPUTATIONS ///////////////////////////////////
-}
+} // namespace ppf_match_3d
 
-}
+} // namespace cv
