@@ -56,6 +56,8 @@ the use of this software, even if advised of the possibility of such damage.
 
 #include "ppf_helpers.hpp"
 #include "c_utils.hpp"
+#include "tmesh.h"
+#include "rply.h"
 
 #include <string>
 #include <cstdio>

@@ -38,10 +38,9 @@
 //
 // Author: Tolga Birdal
 
-#include "tmesh.h"
-#include "ppf_match_3d.hpp"
-#include "icp.hpp"
-#include "visualize_win.h"
+#include "opencv2/ppf_match_3d.hpp"
+#include "opencv2/icp.hpp"
+//#include "visualize_win.h"
 
 using namespace std;
 using namespace cv;
