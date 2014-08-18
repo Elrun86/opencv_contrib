@@ -40,8 +40,6 @@
 
 #include "precomp.hpp"
 
-using namespace std;
-
 namespace cv
 {
 namespace ppf_match_3d

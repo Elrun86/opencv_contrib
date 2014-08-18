@@ -340,9 +340,9 @@ bool PPF3DDetector::matchPose(const Pose3D& sourcePose, const Pose3D& targetPose
     return (phi<this->RotationThreshold && dNorm < this->PositionThreshold);
 }
 
-int PPF3DDetector::clusterPoses(Pose3D** poseList, int NumPoses, vector < Pose3D* >& finalPoses)
+int PPF3DDetector::clusterPoses(Pose3D** poseList, int NumPoses, std::vector<Pose3D*>& finalPoses)
 {
-    vector<PoseCluster3D*> poseClusters;
+    std::vector<PoseCluster3D*> poseClusters;
     poseClusters.clear();
     
     finalPoses.clear();
@@ -392,7 +392,7 @@ int PPF3DDetector::clusterPoses(Pose3D** poseList, int NumPoses, vector < Pose3D
             
             // Perform the final averaging
             PoseCluster3D* curCluster = poseClusters[i];
-            vector<Pose3D*> curPoses = curCluster->poseList;
+            std::vector<Pose3D*> curPoses = curCluster->poseList;
             const int curSize = curPoses.size();
             int numTotalVotes = 0;
             
@@ -445,7 +445,7 @@ int PPF3DDetector::clusterPoses(Pose3D** poseList, int NumPoses, vector < Pose3D
             
             // Perform the final averaging
             PoseCluster3D* curCluster = poseClusters[i];
-            vector<Pose3D*> curPoses = curCluster->poseList;
+            std::vector<Pose3D*> curPoses = curCluster->poseList;
             const int curSize = curPoses.size();
             
             for (int j=0; j<curSize; j++)
@@ -484,7 +484,7 @@ int PPF3DDetector::clusterPoses(Pose3D** poseList, int NumPoses, vector < Pose3D
     return 0;
 }
 
-void PPF3DDetector::match(const Mat& pc, vector < Pose3D* >& results, const double RelativeSceneSampleStep, const double RelativeSceneDistance)
+void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const double RelativeSceneSampleStep, const double RelativeSceneDistance)
 {
     if (!trained)
     {

@@ -49,9 +49,6 @@
 #include <omp.h>
 #endif
 
-using namespace std;
-using namespace cv;
-
 #define FLANN_ALGORITHM_KD FLANN_INDEX_KDTREE_SINGLE
 #define FLANN_CHECKS FLANN_CHECKS_UNLIMITED
 #define FLANN_NUM_TREES 8
@@ -74,7 +71,7 @@ Mat loadPLYSimple(const char* fileName, int numVertices, int withNormals)
     else
         cloud=Mat(numVertices, 3, CV_32FC1);
         
-    ifstream ifs(fileName);
+    std::ifstream ifs(fileName);
     
     if (!ifs.is_open())
     {
@@ -82,7 +79,7 @@ Mat loadPLYSimple(const char* fileName, int numVertices, int withNormals)
         return Mat();
     }
     
-    string str;
+    std::string str;
     while (str.substr(0, 10) !="end_header")
     {
         if ( str.substr(0, 14) == "element vertex" )
@@ -109,6 +106,7 @@ Mat loadPLYSimple(const char* fileName, int numVertices, int withNormals)
                 data[5]/=(float)norm;
             }
         }
+
         else
         {
             ifs >> data[0] >> data[1] >> data[2];
@@ -122,7 +120,7 @@ Mat loadPLYSimple(const char* fileName, int numVertices, int withNormals)
 
 void writePLY(Mat PC, const char* FileName)
 {
-    ofstream outFile( FileName );
+    std::ofstream outFile( FileName );
     
     if ( !outFile )
     {
@@ -135,22 +133,22 @@ void writePLY(Mat PC, const char* FileName)
     // Header
     ////
     
-    const int pointNum    = ( int ) PC.rows;
-    const int vertNum    = ( int ) PC.cols;
+    const int pointNum = ( int ) PC.rows;
+    const int vertNum  = ( int ) PC.cols;
     
-    outFile << "ply" << endl;
-    outFile << "format ascii 1.0" << endl;
-    outFile << "element vertex " << pointNum << endl;
-    outFile << "property float x" << endl;
-    outFile << "property float y" << endl;
-    outFile << "property float z" << endl;
+    outFile << "ply" << std::endl;
+    outFile << "format ascii 1.0" << std::endl;
+    outFile << "element vertex " << pointNum << std::endl;
+    outFile << "property float x" << std::endl;
+    outFile << "property float y" << std::endl;
+    outFile << "property float z" << std::endl;
     if (vertNum==6)
     {
-        outFile << "property float nx" << endl;
-        outFile << "property float ny" << endl;
-        outFile << "property float nz" << endl;
+        outFile << "property float nx" << std::endl;
+        outFile << "property float ny" << std::endl;
+        outFile << "property float nz" << std::endl;
     }
-    outFile << "end_header" << endl;
+    outFile << "end_header" << std::endl;
     
     ////
     // Points
@@ -167,7 +165,7 @@ void writePLY(Mat PC, const char* FileName)
             outFile<<" " << point[3] << " "<<point[4]<<" "<<point[5];
         }
         
-        outFile << endl;
+        outFile << std::endl;
     }
     
     return;
@@ -187,7 +185,7 @@ Mat samplePCUniform(Mat PC, int sampleStep)
     return sampledPC;
 }
 
-Mat samplePCUniformInd(Mat PC, int sampleStep, vector<int> &indices)
+Mat samplePCUniformInd(Mat PC, int sampleStep, std::vector<int> &indices)
 {
     int numRows = cvRound((double)PC.rows/(double)sampleStep);
     indices.resize(numRows);
@@ -336,7 +334,7 @@ void queryPCFlann(void* flannIndex, Mat PC, Mat& Indices, Mat& Distances)
 // This is much faster than sample_pc_octree
 Mat samplePCByQuantization(Mat pc, float xrange[2], float yrange[2], float zrange[2], float sampleStep, int weightByCenter)
 {
-    vector < vector<int> > map;
+    std::vector< std::vector<int> > map;
     
     int numSamplesDim = (int)(1.0/sampleStep);
     
@@ -378,7 +376,7 @@ Mat samplePCByQuantization(Mat pc, float xrange[2], float yrange[2], float zrang
         double px=0, py=0, pz=0;
         double nx=0, ny=0, nz=0;
         
-        vector<int> curCell = map[i];
+        std::vector<int> curCell = map[i];
         const int cn = curCell.size();
         if (cn>0)
         {

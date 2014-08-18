@@ -59,8 +59,6 @@
 #include "surface_matching/pose_3d.hpp"
 #include <vector>
 
-using namespace std;
-
 namespace cv
 {
 namespace ppf_match_3d

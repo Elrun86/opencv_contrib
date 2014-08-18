@@ -67,8 +67,6 @@ IEEE Computer Society Conference on Computer Vision and Pattern Recognition (CVP
 #include "surface_matching/pose_3d.hpp"
 #include "surface_matching/t_hash_int.hpp"
 
-using namespace std;
-
 namespace cv
 {
 namespace ppf_match_3d
@@ -151,7 +149,7 @@ class CV_EXPORTS PPF3DDetector
         *
         *  \details Details
         */
-        void match(const Mat& Scene, vector < Pose3D* >& results, const double RelativeSceneSampleStep=1.0/5.0, const double RelativeSceneDistance=0.03);
+        void match(const Mat& Scene, std::vector<Pose3D*>& results, const double RelativeSceneSampleStep=1.0/5.0, const double RelativeSceneDistance=0.03);
         
         void read(const FileNode& fn);
         void write(FileStorage& fs) const;
@@ -182,7 +180,7 @@ class CV_EXPORTS PPF3DDetector
                                  
         bool matchPose(const Pose3D& sourcePose, const Pose3D& targetPose);
         
-        int clusterPoses(Pose3D** poseList, int numPoses, vector < Pose3D* >& finalPoses);
+        int clusterPoses(Pose3D** poseList, int numPoses, std::vector<Pose3D*>& finalPoses);
         
         bool trained;
 };
