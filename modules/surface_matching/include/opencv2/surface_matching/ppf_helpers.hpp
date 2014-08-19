@@ -59,7 +59,7 @@ void computeBboxStd(cv::Mat pc, float xRange[2], float yRange[2], float zRange[2
 
 void* indexPCFlann(cv::Mat pc);
 void destroyFlann(void* flannIndex);
-void queryPCFlann(void* flannIndex, cv::Mat PC, cv::Mat& Indices, cv::Mat& Distances);
+void queryPCFlann(void* flannIndex, cv::Mat& pc, cv::Mat& indices, cv::Mat& distances);
 
 CV_EXPORTS cv::Mat normalize_pc(cv::Mat pc, float scale);
 cv::Mat normalizePCCoeff(cv::Mat pc, float scale, float* Cx, float* Cy, float* Cz, float* MinVal, float* MaxVal);
