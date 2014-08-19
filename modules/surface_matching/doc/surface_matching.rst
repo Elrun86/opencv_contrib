@@ -1,6 +1,6 @@
-**************************
+**********************************************************
 surface_matching. Matching Surface Models Across 3D Scenes
-**************************
+**********************************************************
 
 Computation of Point Pair Features (PPF)
 ========================================
@@ -255,6 +255,13 @@ multi-resolution scheme can help reducing the number of iterations by
 allowing the registration to start from a coarse level and propagate to
 the lower and finer levels. Such approach both improves the performances
 and enhances the runtime.
+
+
+The search is done through multiple levels, in a hierarchical fashion.
+The registration starts with a very coarse set of samples of the model.
+Iteratively, the points are densified and sought. After each iteration
+the previously estimated pose is used as an initial pose and refined
+with the ICP.
 
 Visual Results
 --------------
