@@ -60,7 +60,7 @@ Mat loadPLYSimple(const char* fileName, int withNormals)
     Mat cloud;
     int numVertices;
     
-    ifstream ifs(fileName);
+    std::ifstream ifs(fileName);
     
     if (!ifs.is_open())
     {
@@ -68,15 +68,15 @@ Mat loadPLYSimple(const char* fileName, int withNormals)
         return Mat();
     }
     
-    string str;
+    std::string str;
     while (str.substr(0, 10) !="end_header")
     {
-        string entry = str.substr(0, 14);
+        std::string entry = str.substr(0, 14);
         if (entry == "element vertex")
         {
             numVertices = atoi(str.substr(15, str.size()-15).c_str());
         }
-        getline(ifs, str);
+        std::getline(ifs, str);
     }
     
     if (withNormals)
