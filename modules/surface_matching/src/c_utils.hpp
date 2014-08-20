@@ -690,7 +690,6 @@ static inline void eigenLowest33(const double C[3][3], double A[3])
     const double t26 = a*t3*(1.0/2.0);
     const double t27 = d*t2*(1.0/2.0);
     const double t28 = f*t9*(1.0/2.0);
-    const double t13 = t11+t20+t21+t22-t26-t27-t28;
     const double t14 = t9*(1.0/3.0);
     const double t15 = t2*(1.0/3.0);
     const double t16 = t3*(1.0/3.0);
@@ -700,7 +699,6 @@ static inline void eigenLowest33(const double C[3][3], double A[3])
     const double t32 = d*f*(1.0/3.0);
     const double t18 = t14+t15+t16+t17-t30-t31-t32;
     const double t19 = t18*t18;
-    const double t29 = t11+t20+t21+t22-t26-t27-t28;
     const double t36 = a*(1.0/3.0);
     const double t37 = d*(1.0/3.0);
     const double t38 = f*(1.0/3.0);
@@ -711,10 +709,6 @@ static inline void eigenLowest33(const double C[3][3], double A[3])
     const double t61 = d*e*f;
     const double t44 = t43-t60-t61+e*t3;
     const double t45 = t7*t44;
-    const double t46 = t11+t20+t21+t22-t26-t27-t28;
-    const double t47 = t11+t20+t21+t22-t26-t27-t28;
-    const double t48 = t11+t20+t21+t22-t26-t27-t28;
-    const double t49 = t11+t20+t21+t22-t26-t27-t28;
     const double t57 = sqrt(3.0);
     const double t51 = b*c;
     const double t52 = d*e;
@@ -729,16 +723,10 @@ static inline void eigenLowest33(const double C[3][3], double A[3])
     const double t68 = t11+t20+t21+t22-t26-t27-t28;
     const double t69 = t11+t20+t21+t22-t26-t27-t28;
     const double t70 = t11+t20+t21+t22-t26-t27-t28;
-    const double t71 = t11+t20+t21+t22-t26-t27-t28;
-    const double t72 = t11+t20+t21+t22-t26-t27-t28;
     const double t76 = c*t3;
     const double t91 = a*c*f;
     const double t92 = b*e*f;
     const double t77 = t76-t91-t92+c*t2;
-    const double t78 = t11+t20+t21+t22-t26-t27-t28;
-    const double t79 = t11+t20+t21+t22-t26-t27-t28;
-    const double t80 = t11+t20+t21+t22-t26-t27-t28;
-    const double t81 = t11+t20+t21+t22-t26-t27-t28;
     const double t83 = a*c;
     const double t84 = b*e;
     const double t85 = c*f;

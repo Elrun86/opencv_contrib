@@ -58,7 +58,7 @@ void meanCovLocalPCInd(const float* pc, const int* Indices, const int ws, const 
 Mat loadPLYSimple(const char* fileName, int withNormals)
 {
     Mat cloud;
-    int numVertices;
+    int numVertices=0;
     
     std::ifstream ifs(fileName);
     
@@ -578,7 +578,7 @@ Also, view point flipping as in point cloud library is implemented
 void meanCovLocalPC(const float* pc, const int ws, const int point_count, double CovMat[3][3], double Mean[4])
 {
     int i;
-    double accu[16];
+    double accu[16]={0};
     
     // For each point in the cloud
     for (i = 0; i < point_count; ++i)
@@ -696,7 +696,7 @@ CV_EXPORTS int computeNormalsPC3d(const Mat& PC, Mat& PCNormals, const int NumNe
     for (i=0; i<PC.rows; i++)
     {
         double C[3][3], mu[4];
-        double w[3], curvature=0;
+        double w[3];
         double trace;
         const float* pci = &dataset[i*3];
         float* pcr = (float*)(&PCNormals.data[i*PCNormals.step]);
@@ -725,10 +725,11 @@ CV_EXPORTS int computeNormalsPC3d(const Mat& PC, Mat& PCNormals, const int NumNe
         
         trace = C[0][0] + C[1][1] + C[2][2];
         
-        if (trace>0)
+        /* One can compute the curvature as follows:
+		if (trace>0)
         {
             curvature = fabs(w[minEigID] / trace);
-        }
+        }*/
         
         pcr[0] = pci[0];
         pcr[1] = pci[1];

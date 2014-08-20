@@ -351,7 +351,7 @@ int PoseCluster3D::readPoseCluster(FILE* f)
     
     poseList.clear();
     poseList.resize(numPoses);
-    for (int i=0; i<poseList.size(); i++)
+    for (size_t i=0; i<poseList.size(); i++)
     {
         poseList[i] = new Pose3D();
         poseList[i]->readPose(f);

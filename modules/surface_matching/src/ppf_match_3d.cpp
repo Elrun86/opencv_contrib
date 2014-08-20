@@ -443,7 +443,7 @@ int PPF3DDetector::clusterPoses(Pose3D** poseList, int numPoses, std::vector<Pos
             std::vector<Pose3D*> curPoses = curCluster->poseList;
             const int curSize = curPoses.size();
             
-            for (size_t j=0; j<curSize; j++)
+            for (int j=0; j<curSize; j++)
             {
                 qAvg[0]+= curPoses[j]->q[0];
                 qAvg[1]+= curPoses[j]->q[1];
@@ -492,7 +492,6 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
     
     //int numNeighbors = 10;
     int numAngles = (int) (floor (2 * M_PI / angle_step));
-    float angleStepRadians = angle_step;
     float distanceStep = distance_step;
     unsigned int n = num_ref_points;
     Pose3D** poseList;
@@ -506,7 +505,7 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
     float dx = xRange[1] - xRange[0];
     float dy = yRange[1] - yRange[0];
     float dz = zRange[1] - zRange[0];
-    float diameter = sqrt ( dx * dx + dy * dy + dz * dz );
+    //float diameter = sqrt ( dx * dx + dy * dy + dz * dz );
     //float distanceSampleStep = diameter * RelativeSceneDistance;
     Mat sampled = samplePCByQuantization(pc, xRange, yRange, zRange, RelativeSceneDistance,1);
     
@@ -551,7 +550,7 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
                 
                 double f[4]={0};
                 computePPFFeatures(p1, n1, p2, n2, f);
-                unsigned int hashValue = hashPPF(f, angleStepRadians, distanceStep);
+                unsigned int hashValue = hashPPF(f, angle_step, distanceStep);
                 
                 // we don't need to call this here, as we already estimate the tsg from scene reference point
                 // double alpha = computeAlpha(p1, n1, p2);

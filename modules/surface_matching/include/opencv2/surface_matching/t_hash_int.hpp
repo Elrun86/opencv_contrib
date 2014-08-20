@@ -93,7 +93,7 @@ unsigned int hashtableResize(hashtable_int *hashtbl, size_t size);
 hashtable_int *hashtable_int_clone(hashtable_int *hashtbl);
 hashtable_int *hashtableRead(FILE* f);
 int hashtableWrite(const hashtable_int * hashtbl, const size_t dataSize, FILE* f);
-void hashtable_int_print(hashtable_int *hashtbl);
+void hashtablePrint(hashtable_int *hashtbl);
 
 } // namespace ppf_match_3d
 

@@ -47,6 +47,8 @@ namespace ppf_match_3d
 // This magic value is just
 #define T_HASH_MAGIC 427462442
 
+size_t hash( unsigned int a);
+
 // default hash function
 size_t hash( unsigned int a)
 {
@@ -318,47 +320,47 @@ void hashtablePrint(hashtable_int *hashtbl)
         for (node=hashtbl->nodes[n]; node; node=next)
         {
             next = node->next;
-            printf("Key : %d, Data : %d\n", node->key, node->data);
+            printf("Key : %d, Data : %d\n", node->key, (size_t)node->data);
         }
     }
 }
 
 hashtable_int *hashtableRead(FILE* f)
 {
-    size_t hashMagic=0;
-    size_t n=0;
-    hashtable_int *hashtbl;
+    size_t hashMagic = 0;
+    size_t n = 0, status;
+    hashtable_int *hashtbl = 0;
     
-    fread(&hashMagic, sizeof(size_t),1, f);
-    if (hashMagic==T_HASH_MAGIC)
+    status = fread(&hashMagic, sizeof(size_t),1, f);
+    if (status && hashMagic==T_HASH_MAGIC)
     {
-        int i;
+        size_t i;
         size_t dataSize;
-        fread(&n, sizeof(size_t),1, f);
-        fread(&dataSize, sizeof(size_t),1, f);
+        status = fread(&n, sizeof(size_t),1, f);
+        status = fread(&dataSize, sizeof(size_t),1, f);
         
         hashtbl=hashtableCreate(n, hash);
         
         for (i=0; i<hashtbl->size; i++)
         {
-            int j=0;
-            fread(&n, sizeof(size_t),1, f);
+            size_t j=0;
+            status = fread(&n, sizeof(size_t),1, f);
             
             for (j=0; j<n; j++)
             {
                 int key=0;
                 void* data=0;
-                fread(&key, sizeof(KeyType), 1, f);
+                status = fread(&key, sizeof(KeyType), 1, f);
                 
                 if (dataSize>sizeof(void*))
                 {
                     data=malloc(dataSize);
                     if (!data)
                         return NULL;
-                    fread(data, dataSize, 1, f);
+                    status = fread(data, dataSize, 1, f);
                 }
                 else
-                    fread(&data, dataSize, 1, f);
+                    status = fread(&data, dataSize, 1, f);
                     
                 hashtableInsert(hashtbl, key, data);
                 //free(key);
