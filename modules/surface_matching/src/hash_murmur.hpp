@@ -33,14 +33,15 @@
 
 #else   // defined(_MSC_VER)
 
-#define FORCE_INLINE __attribute__((always_inline))
+//#define FORCE_INLINE __attribute__((always_inline))
+#define FORCE_INLINE inline static
 
-inline int ROTL32 ( int x, int8_t r )
+inline static int ROTL32 ( int x, int8_t r )
 {
     return (x << r) | (x >> (32 - r));
 }
 
-inline long long ROTL64 ( long long x, int8_t r )
+inline static long long ROTL64 ( long long x, int8_t r )
 {
     return (x << r) | (x >> (64 - r));
 }
@@ -101,12 +102,9 @@ FORCE_INLINE void hashMurmurx86 ( const void * key, int len, int seed, void * ou
     int c2 = 0x1b873593;
     int i;
     
-    //----------
-    // body
-    
     const int * blocks = (const int *)(data + nblocks*4);
     unsigned char * tail;
-    int k1 = 0;
+    int k1g = 0;
     
     for (i = -nblocks; i; i++)
     {
@@ -122,27 +120,21 @@ FORCE_INLINE void hashMurmurx86 ( const void * key, int len, int seed, void * ou
         h1 = h1*5+0xe6546b64;
     }
     
-    //----------
-    // tail
-    
     tail = (unsigned char*)(data + nblocks*4);
     
     switch (len & 3)
     {
         case 3:
-            k1 ^= tail[2] << 16;
+            k1g ^= tail[2] << 16;
         case 2:
-            k1 ^= tail[1] << 8;
+            k1g ^= tail[1] << 8;
         case 1:
-            k1 ^= tail[0];
-            k1 *= c1;
-            k1 = ROTL32(k1,15);
-            k1 *= c2;
-            h1 ^= k1;
+            k1g ^= tail[0];
+            k1g *= c1;
+            k1g = ROTL32(k1g,15);
+            k1g *= c2;
+            h1 ^= k1g;
     };
-    
-    //----------
-    // finalization
     
     h1 ^= len;
     
