@@ -48,16 +48,12 @@ namespace ppf_match_3d
 typedef cv::flann::L2<float> Distance_32F;
 typedef cv::flann::GenericIndex< Distance_32F > FlannIndex;
 
-Mat loadPLYSimple(const char* fileName, int numVertices, int withNormals)
+Mat loadPLYSimple(const char* fileName, int withNormals)
 {
     Mat cloud;
+    int numVertices;
     
-    if (withNormals)
-        cloud=Mat(numVertices, 6, CV_32FC1);
-    else
-        cloud=Mat(numVertices, 3, CV_32FC1);
-        
-    std::ifstream ifs(fileName);
+    ifstream ifs(fileName);
     
     if (!ifs.is_open())
     {
@@ -65,16 +61,22 @@ Mat loadPLYSimple(const char* fileName, int numVertices, int withNormals)
         return Mat();
     }
     
-    std::string str;
+    string str;
     while (str.substr(0, 10) !="end_header")
     {
-        if ( str.substr(0, 14) == "element vertex" )
+        string entry = str.substr(0, 14);
+        if (entry == "element vertex")
         {
-        
+            numVertices = atoi(str.substr(15, str.size()-15).c_str());
         }
         getline(ifs, str);
     }
     
+    if (withNormals)
+        cloud=Mat(numVertices, 6, CV_32FC1);
+    else
+        cloud=Mat(numVertices, 3, CV_32FC1);
+        
     float dummy =  0;
     for (int i = 0; i < numVertices; i++)
     {
@@ -92,7 +94,6 @@ Mat loadPLYSimple(const char* fileName, int numVertices, int withNormals)
                 data[5]/=(float)norm;
             }
         }
-
         else
         {
             ifs >> data[0] >> data[1] >> data[2];
@@ -100,9 +101,8 @@ Mat loadPLYSimple(const char* fileName, int numVertices, int withNormals)
     }
     
     //cloud *= 5.0f;
-    return cloud;
+    return cloud; 
 }
-
 
 void writePLY(Mat PC, const char* FileName)
 {

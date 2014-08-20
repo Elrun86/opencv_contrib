@@ -48,7 +48,7 @@ namespace cv
 namespace ppf_match_3d
 {
 
-CV_EXPORTS cv::Mat loadPLYSimple(const char* fileName, int numVertices, int withNormals);
+CV_EXPORTS cv::Mat loadPLYSimple(const char* fileName, int withNormals);
 void writePLY(cv::Mat PC, const char* FileName);
 
 cv::Mat samplePCUniform(cv::Mat PC, int sampleStep);
