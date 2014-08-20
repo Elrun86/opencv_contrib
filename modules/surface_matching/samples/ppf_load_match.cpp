@@ -41,6 +41,7 @@
 #include "opencv2/ppf_match_3d.hpp"
 #include <iostream>
 #include "opencv2/icp.hpp"
+#include "opencv2/surface_matching/ppf_helpers.hpp"
 #include "opencv2/core/utility.hpp"
 
 using namespace std;
@@ -50,78 +51,80 @@ using namespace ppf_match_3d;
 static void help(std::string errorMessage)
 {
     std::cout<<"Program init error : "<<errorMessage<<std::endl;
-    std::cout<<"\nUsage : ppf_matching [input model file] [input scene file]"<<std::endl;    
-    std::cout<<"\nPlease start again with new parameters"<<std::endl;    
+    std::cout<<"\nUsage : ppf_matching [input model file] [input scene file]"<<std::endl;
+    std::cout<<"\nPlease start again with new parameters"<<std::endl;
 }
 
 int main(int argc, char** argv)
 {
-    // welcome message    
-    std::cout<< "****************************************************"<<std::endl;    
+    // welcome message
+    std::cout<< "****************************************************"<<std::endl;
     std::cout<< "* Surface Matching demonstration : demonstrates the use of surface matching"
              " using point pair features."<<std::endl;
     std::cout<< "* The sample loads a model and a scene, where the model lies in a different"
-             " pose than the training."<<std::endl;
-    std::cout<< "* The sample loads a model and a scene, where the model lies in a different"
              " pose than the training. It then "<<std::endl;
-    std::cout<< "****************************************************"<<std::endl;    
-    
-    if (argc < 3)    
-    {    
-        help("Not enough input arguments");        
-        exit(1);        
+    std::cout<< "****************************************************"<<std::endl;
+
+    if (argc < 3)
+    {
+        help("Not enough input arguments");
+        exit(1);
     }
-    
+
     string modelFileName = (string)argv[1];
     string sceneFileName = (string)argv[2];
-    
-    Mat pc;//TODO: fix = loadPLYSimple(modelFileName.c_str(), 1);
-    
+
+    Mat pc = loadPLYSimple(modelFileName.c_str(), 1);
+
     // Now train the model
-    printf("Training...");
+    cout << "Training..." << endl;
     int64 tick1 = cv::getTickCount();
     ppf_match_3d::PPF3DDetector detector(0.03, 0.05);
     detector.trainModel(pc);
     int64 tick2 = cv::getTickCount();
-    printf("\nTraining complete in %f ms.\nLoading model...", (double)(tick2-tick1)/ cv::getTickFrequency());
-    
+    cout << endl << "Training complete in "
+         << (double)(tick2-tick1)/ cv::getTickFrequency()
+         << " ms" << endl << "Loading model..." << endl;
+
     // Read the scene
-    Mat pcTest;//TODO: fix = loadPLYSimple(sceneFileName.c_str(), 1);
-    
+    Mat pcTest = loadPLYSimple(sceneFileName.c_str(), 1);
+
     // Match the model to the scene and get the pose
-    printf("\nStarting matching...");
+    cout << endl << "Starting matching..." << endl;
     vector < Pose3D* > results;
     tick1 = cv::getTickCount();
     detector.match(pcTest, results, 1.0/10.0, 0.05);
     tick2 = cv::getTickCount();
-    printf("\nPPF Elapsed Time %f sec", (double)(tick2-tick1)/ cv::getTickFrequency());
-    
+    cout << endl << "PPF Elapsed Time " <<
+            (tick2-tick1)/cv::getTickFrequency() << " ms" << endl;
+
     // Get only first N results
     int N = 2;
     vector<Pose3D*>::const_iterator first = results.begin();
     vector<Pose3D*>::const_iterator last = results.begin() + N;
     vector<Pose3D*> resultsSub(first, last);
-    
+
     // Create an instance of ICP
     ICP icp(200, 0.001f, 2.5f, 8);
-    float residualOutput = 0;
     int64 t1 = cv::getTickCount();
-    
+
     // Register for all selected poses
-    printf("\nPerforming ICP on %d poses...", N);
+    cout << endl << "Performing ICP on " << N << " poses..." << endl;
     icp.registerModelToScene(pc, pcTest, resultsSub);
     int64 t2 = cv::getTickCount();
-    
-    printf("\nElapsed Time on ICP: %f\nEstimated Poses:\n", (double)(t2-t1)/cv::getTickFrequency());
-    
+
+    cout << endl << "ICP Elapsed Time " <<
+            (t2-t1)/cv::getTickFrequency() << " sec" << endl;
+
+    cout << "Poses: " << endl;
     // debug first five poses
     for (size_t i=0; i<resultsSub.size(); i++)
     {
-        Pose3D* pose = resultsSub[i];        
-        printf("Pose Result %d:\n", i);
+        Pose3D* pose = resultsSub[i];
+        cout << "Pose Result " << i << endl;
         pose->printPose();
     }
-    
+
     return 0;
 }
 
