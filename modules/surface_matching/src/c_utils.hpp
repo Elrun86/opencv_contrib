@@ -41,38 +41,18 @@
 #ifndef __OPENCV_PPF_UTILS_HPP_
 #define __OPENCV_PPF_UTILS_HPP_
 
-#include <math.h>
-#include <stdio.h>
+#include <cmath>
+#include <cstdio>
 
 namespace cv
 {
 namespace ppf_match_3d
 {
 
-#define EPS  1.192092896e-07F        /* smallest such that 1.0+FLT_EPSILON != 1.0 */
-
-//#define T_OPENMP // define this if OpenMP is desired
-
-#ifndef PI
-#ifdef  M_PI
-#define PI               M_PI
-#define PI_F             3.1415926535897932384626433832795f
-#else
-#define PI               3.1415926535897932384626433832795
-#define PI_F             3.1415926535897932384626433832795f
-#endif
-#endif
+const float EPS = 1.192092896e-07F;        /* smallest such that 1.0+FLT_EPSILON != 1.0 */
 
 #ifndef M_PI
-#define M_PI             PI
-#endif
-
-#ifndef MIN
-#define MIN(a,b)  ((a) > (b) ? (b) : (a))
-#endif
-
-#ifndef MAX
-#define MAX(a,b)  ((a) < (b) ? (b) : (a))
+#define M_PI  3.1415926535897932384626433832795
 #endif
 
 static inline double TNorm3(const double v[])

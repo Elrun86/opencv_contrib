@@ -122,7 +122,7 @@ PPF3DDetector::PPF3DDetector()
     distanceStepRelative = 0.05;
     SceneSampleStep = 1/0.04;
     angleStepRelative = 30;
-    angleStepRadians = (360.0/angleStepRelative)*PI/180.0;
+    angleStepRadians = (360.0/angleStepRelative)*M_PI/180.0;
     angle_step = angleStepRadians;
     trained = false;
     
@@ -134,7 +134,7 @@ PPF3DDetector::PPF3DDetector(const double RelativeSamplingStep, const double Rel
     samplingStepRelative = RelativeSamplingStep;
     distanceStepRelative = RelativeDistanceStep;
     angleStepRelative = NumAngles;
-    angleStepRadians = (360.0/angleStepRelative)*PI/180.0;
+    angleStepRadians = (360.0/angleStepRelative)*M_PI/180.0;
     //SceneSampleStep = 1.0/RelativeSceneSampleStep;
     angle_step = angleStepRadians;
     trained = false;
@@ -592,7 +592,7 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
                     */
                     
                     //printf("%f\n", alpha);
-                    int alpha_index = (int)(numAngles*(alpha + 2*PI) / (4*PI));
+                    int alpha_index = (int)(numAngles*(alpha + 2*M_PI) / (4*M_PI));
                     
                     unsigned int accIndex = corrI * numAngles + alpha_index;
                     
@@ -651,7 +651,7 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
                          
         // convert alpha_index to alpha
         int alpha_index = alphaIndMax;
-        double alpha = (alpha_index*(4*PI))/numAngles-2*PI;
+        double alpha = (alpha_index*(4*M_PI))/numAngles-2*M_PI;
         
         // Equation 2:
         double Talpha[16]={0};
