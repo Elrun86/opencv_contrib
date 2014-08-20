@@ -48,6 +48,13 @@ namespace ppf_match_3d
 typedef cv::flann::L2<float> Distance_32F;
 typedef cv::flann::GenericIndex< Distance_32F > FlannIndex;
 
+void shuffle(int *array, size_t n);
+Mat genRandomMat(int rows, int cols, double mean, double stddev, int type);
+void getRandQuat(double q[4]);
+void getRandomRotation(double R[9]);
+void meanCovLocalPC(const float* pc, const int ws, const int point_count, double CovMat[3][3], double Mean[4]);
+void meanCovLocalPCInd(const float* pc, const int* Indices, const int ws, const int point_count, double CovMat[3][3], double Mean[4]);
+
 Mat loadPLYSimple(const char* fileName, int withNormals)
 {
     Mat cloud;
@@ -77,7 +84,6 @@ Mat loadPLYSimple(const char* fileName, int withNormals)
     else
         cloud=Mat(numVertices, 3, CV_32FC1);
         
-    float dummy =  0;
     for (int i = 0; i < numVertices; i++)
     {
         float* data = (float*)(&cloud.data[i*cloud.step[0]]);
@@ -196,17 +202,15 @@ void* indexPCFlann(Mat pc)
 
 void destroyFlann(void* flannIndex)
 {
-    FlannIndex* flann_index = (FlannIndex*)flannIndex;
-    delete flann_index;
+    delete ((FlannIndex*)flannIndex);
 }
 
 // For speed purposes this function assumes that PC, Indices and Distances are created with continuous structures
 void queryPCFlann(void* flannIndex, cv::Mat& pc, cv::Mat& indices, cv::Mat& distances)
 {
-    FlannIndex* flann_index = (FlannIndex*)flannIndex;
     Mat obj_32f; 
     pc.colRange(0,3).copyTo(obj_32f);
-    flann_index->knnSearch(obj_32f, indices, distances, 1, cvflann::SearchParams(32) ); 
+    ((FlannIndex*)flannIndex)->knnSearch(obj_32f, indices, distances, 1, cvflann::SearchParams(32) ); 
 }
 
 // uses a volume instead of an octree

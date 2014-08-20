@@ -726,9 +726,6 @@ static inline void eigenLowest33(const double C[3][3], double A[3])
     const double t38 = f*(1.0/3.0);
     const double t39 = t8*(t2+t3+t9-t23-t24-t25)*(1.0/6.0);
     const double t41 = t18*t19;
-    const double t33 = t36+t37+t38+t18*1.0/pow(t11+t20+t21+t22-a*t3*(1.0/2.0)-d*t2*(1.0/2.0)-f*t9*(1.0/2.0)+sqrt(-t41+t13*t13),1.0/3.0)+pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t29*t29),1.0/3.0);
-    const double t40 = t11+t20+t21+t22-t26-t27-t28;
-    const double t42 = t11+t20+t21+t22-t26-t27-t28;
     const double t43 = e*t2;
     const double t60 = b*c*f;
     const double t61 = d*e*f;
@@ -739,15 +736,10 @@ static inline void eigenLowest33(const double C[3][3], double A[3])
     const double t48 = t11+t20+t21+t22-t26-t27-t28;
     const double t49 = t11+t20+t21+t22-t26-t27-t28;
     const double t57 = sqrt(3.0);
-    const double t50 = t36+t37+t38-t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t46*t46),1.0/3.0)*(1.0/2.0)-t57*(t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t48*t48),1.0/3.0)-pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t49*t49),1.0/3.0))*5.0E-1*sqrt(-1.0)-pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t47*t47),1.0/3.0)*(1.0/2.0);
     const double t51 = b*c;
     const double t52 = d*e;
     const double t53 = e*f;
     const double t54 = t51+t52+t53;
-    const double t55 = t11+t20+t21+t22-t26-t27-t28;
-    const double t56 = t11+t20+t21+t22-t26-t27-t28;
-    const double t58 = t11+t20+t21+t22-t26-t27-t28;
-    const double t59 = t11+t20+t21+t22-t26-t27-t28;
     const double t62 = t11+t20+t21+t22-t26-t27-t28;
     const double t63 = t11+t20+t21+t22-t26-t27-t28;
     const double t64 = t11+t20+t21+t22-t26-t27-t28;
@@ -759,9 +751,6 @@ static inline void eigenLowest33(const double C[3][3], double A[3])
     const double t70 = t11+t20+t21+t22-t26-t27-t28;
     const double t71 = t11+t20+t21+t22-t26-t27-t28;
     const double t72 = t11+t20+t21+t22-t26-t27-t28;
-    const double t73 = t36+t37+t38+t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t71*t71),1.0/3.0)+pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t72*t72),1.0/3.0);
-    const double t74 = t11+t20+t21+t22-t26-t27-t28;
-    const double t75 = t11+t20+t21+t22-t26-t27-t28;
     const double t76 = c*t3;
     const double t91 = a*c*f;
     const double t92 = b*e*f;
@@ -770,15 +759,10 @@ static inline void eigenLowest33(const double C[3][3], double A[3])
     const double t79 = t11+t20+t21+t22-t26-t27-t28;
     const double t80 = t11+t20+t21+t22-t26-t27-t28;
     const double t81 = t11+t20+t21+t22-t26-t27-t28;
-    const double t82 = t36+t37+t38-t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t78*t78),1.0/3.0)*(1.0/2.0)-t57*(t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t80*t80),1.0/3.0)-pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t81*t81),1.0/3.0))*5.0E-1*sqrt(-1.0)-pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t79*t79),1.0/3.0)*(1.0/2.0);
     const double t83 = a*c;
     const double t84 = b*e;
     const double t85 = c*f;
     const double t86 = t83+t84+t85;
-    const double t87 = t11+t20+t21+t22-t26-t27-t28;
-    const double t88 = t11+t20+t21+t22-t26-t27-t28;
-    const double t89 = t11+t20+t21+t22-t26-t27-t28;
-    const double t90 = t11+t20+t21+t22-t26-t27-t28;
     const double t93 = t11+t20+t21+t22-t26-t27-t28;
     const double t94 = t11+t20+t21+t22-t26-t27-t28;
     const double t95 = t11+t20+t21+t22-t26-t27-t28;
@@ -788,14 +772,8 @@ static inline void eigenLowest33(const double C[3][3], double A[3])
     const double t99 = t11+t20+t21+t22-t26-t27-t28;
     const double t100 = t11+t20+t21+t22-t26-t27-t28;
     const double t101 = t11+t20+t21+t22-t26-t27-t28;
-    //A0[0][0] = t45-e*t7*(t33*t33)+t7*t54*(t36+t37+t38+t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t40*t40),1.0/3.0)+pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t42*t42),1.0/3.0));
-    //A0[0][1] = t45-e*t7*(t50*t50)+t7*t54*(t36+t37+t38-t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t55*t55),1.0/3.0)*(1.0/2.0)-t57*(t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t58*t58),1.0/3.0)-pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t59*t59),1.0/3.0))*5.0E-1*sqrt(-1.0)-pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t56*t56),1.0/3.0)*(1.0/2.0));
     A[0] = t45-e*t7*(t66*t66)+t7*t54*(t36+t37+t38-t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t67*t67),1.0/3.0)*(1.0/2.0)+t57*(t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t69*t69),1.0/3.0)-pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t70*t70),1.0/3.0))*5.0E-1*sqrt(-1.0)-pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t68*t68),1.0/3.0)*(1.0/2.0));
-    //A0[1][0] = -t7*t77+c*t7*(t73*t73)-t7*t86*(t36+t37+t38+t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t74*t74),1.0/3.0)+pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t75*t75),1.0/3.0));
-    //A0[1][1] = -t7*t77+c*t7*(t82*t82)-t7*t86*(t36+t37+t38-t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t87*t87),1.0/3.0)*(1.0/2.0)-t57*(t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t89*t89),1.0/3.0)-pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t90*t90),1.0/3.0))*5.0E-1*sqrt(-1.0)-pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t88*t88),1.0/3.0)*(1.0/2.0));
     A[1] = -t7*t77+c*t7*(t97*t97)-t7*t86*(t36+t37+t38-t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t98*t98),1.0/3.0)*(1.0/2.0)+t57*(t18*1.0/pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t100*t100),1.0/3.0)-pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t101*t101),1.0/3.0))*5.0E-1*sqrt(-1.0)-pow(t20+t21+t22-t26-t27-t28+t39+sqrt(-t41+t99*t99),1.0/3.0)*(1.0/2.0));
-    //A0[2][0] = 1.0;
-    //A0[2][1] = 1.0;
     A[2] = 1.0;
 }
 
