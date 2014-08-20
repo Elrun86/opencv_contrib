@@ -335,7 +335,7 @@ bool PPF3DDetector::matchPose(const Pose3D& sourcePose, const Pose3D& targetPose
     return (phi<this->RotationThreshold && dNorm < this->PositionThreshold);
 }
 
-int PPF3DDetector::clusterPoses(Pose3D** poseList, int NumPoses, std::vector<Pose3D*>& finalPoses)
+int PPF3DDetector::clusterPoses(Pose3D** poseList, int numPoses, std::vector<Pose3D*>& finalPoses)
 {
     std::vector<PoseCluster3D*> poseClusters;
     poseClusters.clear();
@@ -343,9 +343,9 @@ int PPF3DDetector::clusterPoses(Pose3D** poseList, int NumPoses, std::vector<Pos
     finalPoses.clear();
     
     // sort the poses for stability
-    qsort(poseList, NumPoses, sizeof(Pose3D*), qsortPoseCmp);
+    qsort(poseList, numPoses, sizeof(Pose3D*), qsortPoseCmp);
     
-    for (int i=0; i<NumPoses; i++)
+    for (int i=0; i<numPoses; i++)
     {
         Pose3D* pose = poseList[i];
         bool assigned = false;
@@ -490,7 +490,6 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
     
     SceneSampleStep = 1.0/RelativeSceneSampleStep;
     
-    int i;
     //int numNeighbors = 10;
     int numAngles = (int) (floor (2 * M_PI / angle_step));
     float angleStepRadians = angle_step;
@@ -521,12 +520,10 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
 #if defined T_OPENMP
 #pragma omp parallel for
 #endif
-    for (i = 0; i < sampled.rows; i += sceneSamplingStep)
+    for (int i = 0; i < sampled.rows; i += sceneSamplingStep)
     {
         unsigned int refIndMax = 0, alphaIndMax = 0;
         unsigned int maxVotes = 0;
-        
-        int j;
         
         float* f1 = (float*)(&sampled.data[i * sampled.step]);
         const double p1[4] = {f1[0], f1[1], f1[2], 0};
@@ -543,7 +540,7 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
         // To do this, simply search the local neighborhood by radius look up
         // and collect the neighbors to compute the relative pose
         
-        for (j = 0; j < sampled.rows; j ++)
+        for (int j = 0; j < sampled.rows; j ++)
         {
             if (i!=j)
             {

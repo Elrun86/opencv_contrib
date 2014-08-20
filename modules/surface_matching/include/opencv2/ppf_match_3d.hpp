@@ -154,7 +154,7 @@ class CV_EXPORTS PPF3DDetector
         double maxDist, angle_step, angleStepRadians, distance_step;
         double samplingStepRelative, angleStepRelative, distanceStepRelative;
         Mat inputPC, sampledPC, PPF;
-        int n, num_ref_points, sampled_step, ppf_step;
+        int num_ref_points, sampled_step, ppf_step;
         hashtable_int* hash_table;
         THash* hash_nodes;
         

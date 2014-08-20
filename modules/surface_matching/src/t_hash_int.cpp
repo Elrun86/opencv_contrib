@@ -236,7 +236,6 @@ void *hashtableGet(hashtable_int *hashtbl, KeyType key)
 
 hashnode_i* hashtableGetBucketHashed(hashtable_int *hashtbl, KeyType key)
 {
-    struct hashnode_i *node;
     size_t hash = key % hashtbl->size;
     
     return hashtbl->nodes[hash];
@@ -343,7 +342,6 @@ hashtable_int *hashtableRead(FILE* f)
         for (i=0; i<hashtbl->size; i++)
         {
             int j=0;
-            struct hashnode_i* node;
             fread(&n, sizeof(size_t),1, f);
             
             for (j=0; j<n; j++)
