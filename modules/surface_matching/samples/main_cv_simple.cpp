@@ -38,9 +38,10 @@
 //
 // Author: Tolga Birdal
 
-#include "ppf_match_3d.hpp"
+#include "opencv2/ppf_match_3d.hpp"
 #include <iostream>
-#include "icp.hpp"
+#include "opencv2/icp.hpp"
+#include "opencv2/core/utility.hpp"
 
 using namespace std;
 using namespace cv;
@@ -74,7 +75,7 @@ int main(int argc, char** argv)
     string modelFileName = (string)argv[1];
     string sceneFileName = (string)argv[2];
     
-    Mat pc = loadPLYSimple(modelFileName.c_str(), 1);
+    Mat pc;//TODO: fix = loadPLYSimple(modelFileName.c_str(), 1);
     
     // Now train the model
     printf("Training...");
@@ -85,7 +86,7 @@ int main(int argc, char** argv)
     printf("\nTraining complete in %f ms.\nLoading model...", (double)(tick2-tick1)/ cv::getTickFrequency());
     
     // Read the scene
-    Mat pcTest = loadPLYSimple(sceneFileName.c_str(), 1);
+    Mat pcTest;//TODO: fix = loadPLYSimple(sceneFileName.c_str(), 1);
     
     // Match the model to the scene and get the pose
     printf("\nStarting matching...");
@@ -111,7 +112,7 @@ int main(int argc, char** argv)
     icp.registerModelToScene(pc, pcTest, resultsSub);
     int64 t2 = cv::getTickCount();
     
-    printf("\nElapsed Time on ICP: %f\nEstimated Poses:\n"", (double)(t2-t1)/cv::getTickFrequency());
+    printf("\nElapsed Time on ICP: %f\nEstimated Poses:\n", (double)(t2-t1)/cv::getTickFrequency());
     
     // debug first five poses
     for (size_t i=0; i<resultsSub.size(); i++)
