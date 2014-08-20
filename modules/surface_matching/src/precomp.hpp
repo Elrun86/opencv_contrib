@@ -45,9 +45,6 @@ the use of this software, even if advised of the possibility of such damage.
 #include "opencv2/ppf_match_3d.hpp"
 #include "opencv2/icp.hpp"
 #include "opencv2/surface_matching/ppf_helpers.hpp"
-#include "opencv2/flann.hpp"
-
-#include "c_utils.hpp"
 
 #include <string>
 #include <cstdio>
@@ -60,6 +57,11 @@ the use of this software, even if advised of the possibility of such damage.
 
 #if defined (T_OPENMP)
 #include<omp.h>
+
 #endif
+#include <sstream>  // WTF bananas
+#include "opencv2/flann.hpp"
+
+#include "c_utils.hpp"
 
 #endif /* __OPENCV_SURFACE_MATCHING_PRECOMP_HPP__ */
