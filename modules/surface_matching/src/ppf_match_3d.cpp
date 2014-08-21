@@ -252,8 +252,8 @@ int PPF3DDetector::trainModel(const Mat &PC)
     
     int numPPF = sampled.rows*sampled.rows;
     PPF = Mat(numPPF, T_PPF_LENGTH, CV_32FC1);
-    int ppfStep = PPF.step;
-    int sampledStep = sampled.step;
+    int ppfStep = (int)PPF.step;
+    int sampledStep = (int)sampled.step;
     
     // TODO: Maybe I could sample 1/5th of them here. Check the performance later.
     int numRefPoints = sampled.rows;
@@ -388,7 +388,7 @@ int PPF3DDetector::clusterPoses(Pose3D** poseList, int numPoses, std::vector<Pos
             // Perform the final averaging
             PoseCluster3D* curCluster = poseClusters[i];
             std::vector<Pose3D*> curPoses = curCluster->poseList;
-            const int curSize = curPoses.size();
+            int curSize = (int)curPoses.size();
             int numTotalVotes = 0;
             
             for (int j=0; j<curSize; j++)
@@ -441,7 +441,7 @@ int PPF3DDetector::clusterPoses(Pose3D** poseList, int numPoses, std::vector<Pos
             // Perform the final averaging
             PoseCluster3D* curCluster = poseClusters[i];
             std::vector<Pose3D*> curPoses = curCluster->poseList;
-            const int curSize = curPoses.size();
+            int curSize = (int)curPoses.size();
             
             for (int j=0; j<curSize; j++)
             {
