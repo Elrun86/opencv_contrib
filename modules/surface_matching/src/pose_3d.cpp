@@ -327,7 +327,7 @@ int PoseCluster3D::writePoseCluster(FILE* f)
     fwrite(&id, sizeof(int), 1, f);
     fwrite(&numVotes, sizeof(int), 1, f);
     
-    int numPoses = poseList.size();
+    int numPoses = (int)poseList.size();
     fwrite(&numPoses, sizeof(int), 1, f);
     
     for (int i=0; i<numPoses; i++)
@@ -338,8 +338,10 @@ int PoseCluster3D::writePoseCluster(FILE* f)
 
 int PoseCluster3D::readPoseCluster(FILE* f)
 {
+    // The magic values are only used to check the files
     int POSE_CLUSTER_MAGIC_IO = 8462597;
-    int magic=0, numPoses=0, status;
+    int magic=0, numPoses=0;
+    size_t status;
     status = fread(&magic, sizeof(int), 1, f);
     
     if (!status || magic!=POSE_CLUSTER_MAGIC_IO)

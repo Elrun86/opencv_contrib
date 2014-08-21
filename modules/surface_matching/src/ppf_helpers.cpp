@@ -261,7 +261,7 @@ Mat samplePCByQuantization(Mat pc, float xrange[2], float yrange[2], float zrang
         double nx=0, ny=0, nz=0;
         
         std::vector<int> curCell = map[i];
-        const int cn = curCell.size();
+        int cn = (int)curCell.size();
         if (cn>0)
         {
             if (weightByCenter)
