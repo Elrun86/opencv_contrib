@@ -320,7 +320,8 @@ void hashtablePrint(hashtable_int *hashtbl)
         for (node=hashtbl->nodes[n]; node; node=next)
         {
             next = node->next;
-            printf("Key : %d, Data : %d\n", node->key, reinterpret_cast<int>(node->data));
+            //printf("Key : %d, Data : %d\n", node->key, reinterpret_cast<int>(node->data));
+			std::cout<<"Key : "<<node->key<<", Data : "<<node->data<<std::endl;
         }
     }
 }
