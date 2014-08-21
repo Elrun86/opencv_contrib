@@ -85,7 +85,7 @@ hashtable_int *hashtableCreate(size_t size, size_t (*hashfunc)(unsigned int))
     }
     else
     {
-        size = next_power_of_two(size);
+        size = (size_t)next_power_of_two(size);
     }
     
     if (!(hashtbl=(hashtable_int*)malloc(sizeof(hashtable_int))))
