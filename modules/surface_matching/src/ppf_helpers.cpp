@@ -698,7 +698,6 @@ CV_EXPORTS int computeNormalsPC3d(const Mat& PC, Mat& PCNormals, const int NumNe
         double C[3][3], mu[4];
         const float* pci = &dataset[i*3];
         float* pcr = (float*)(&PCNormals.data[i*PCNormals.step]);
-        int minEigID = 2;
         double nr[3];
         
         int* indLocal = &indices[i*NumNeighbors];
