@@ -696,7 +696,6 @@ CV_EXPORTS int computeNormalsPC3d(const Mat& PC, Mat& PCNormals, const int NumNe
     for (i=0; i<PC.rows; i++)
     {
         double C[3][3], mu[4];
-        double w[3];
         const float* pci = &dataset[i*3];
         float* pcr = (float*)(&PCNormals.data[i*PCNormals.step]);
         int minEigID = 2;
@@ -709,26 +708,7 @@ CV_EXPORTS int computeNormalsPC3d(const Mat& PC, Mat& PCNormals, const int NumNe
         
         // eigenvectors of covariance matrix
         eigenLowest33(C, nr);
-        
-        /* One can compute the curvature as follows:
-		// find min eigenvalue
-        if (w[0]<w[1])
-        {
-            if (w[0]<w[2])
-                minEigID = 0; // w0 is min
-        }
-        else
-        {
-            if (w[1]<w[2])
-                minEigID = 1;
-        }
-		
-        double trace = C[0][0] + C[1][1] + C[2][2];        
-		if (trace>0)
-        {
-            curvature = fabs(w[minEigID] / trace);
-        }*/
-        
+                
         pcr[0] = pci[0];
         pcr[1] = pci[1];
         pcr[2] = pci[2];
