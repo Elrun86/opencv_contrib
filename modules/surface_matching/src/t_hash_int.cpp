@@ -85,13 +85,15 @@ hashtable_int *hashtableCreate(size_t size, size_t (*hashfunc)(unsigned int))
     }
     else
     {
-        size = (size_t)next_power_of_two(size);
+        size = (size_t)next_power_of_two((unsigned int)size);
     }
     
-    if (!(hashtbl=(hashtable_int*)malloc(sizeof(hashtable_int))))
+	hashtbl=(hashtable_int*)malloc(sizeof(hashtable_int));
+    if (!hashtbl)
         return NULL;
         
-    if (!(hashtbl->nodes=(hashnode_i**)calloc(size, sizeof(struct hashnode_i*))))
+	hashtbl->nodes=(hashnode_i**)calloc(size, sizeof(struct hashnode_i*));
+    if (!hashtbl->nodes)
     {
         free(hashtbl);
         return NULL;
@@ -148,7 +150,8 @@ int hashtableInsert(hashtable_int *hashtbl, KeyType key, void *data)
     }
     
     
-    if (!(node=(hashnode_i*)malloc(sizeof(struct hashnode_i))))
+	node=(hashnode_i*)malloc(sizeof(struct hashnode_i));
+    if (!node)
         return -1;
     node->key=key;
     
@@ -179,9 +182,10 @@ int hashtableInsertHashed(hashtable_int *hashtbl, KeyType key, void *data)
         node=node->next;
     }
     
-    
-    if (!(node=(hashnode_i*)malloc(sizeof(struct hashnode_i))))
+	node=(hashnode_i*)malloc(sizeof(struct hashnode_i));
+    if (!node)
         return -1;
+		
     node->key=key;
     
     node->data=data;
@@ -252,7 +256,8 @@ int hashtableResize(hashtable_int *hashtbl, size_t size)
     newtbl.size=size;
     newtbl.hashfunc=hashtbl->hashfunc;
     
-    if (!(newtbl.nodes=(hashnode_i**)calloc(size, sizeof(struct hashnode_i*))))
+	newtbl.nodes=(hashnode_i**)calloc(size, sizeof(struct hashnode_i*));
+    if (!newtbl.nodes)
         return -1;
         
     for (n=0; n<hashtbl->size; ++n)
