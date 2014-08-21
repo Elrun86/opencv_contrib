@@ -120,7 +120,7 @@ PPF3DDetector::PPF3DDetector()
 {
     samplingStepRelative = 0.05;
     distanceStepRelative = 0.05;
-    SceneSampleStep = 1/0.04;
+    SceneSampleStep = (int)(1/0.04);
     angleStepRelative = 30;
     angleStepRadians = (360.0/angleStepRelative)*M_PI/180.0;
     angle_step = angleStepRadians;
@@ -242,9 +242,9 @@ int PPF3DDetector::trainModel(const Mat &PC)
     float dz = zRange[1] - zRange[0];
     float diameter = sqrt ( dx * dx + dy * dy + dz * dz );
     
-    float distanceStep = diameter * samplingStepRelative;
+    float distanceStep = (float)(diameter * samplingStepRelative);
     
-    Mat sampled = samplePCByQuantization(PC, xRange, yRange, zRange, samplingStepRelative,0);
+    Mat sampled = samplePCByQuantization(PC, xRange, yRange, zRange, (float)samplingStepRelative,0);
     
     int size = sampled.rows*sampled.rows;
     
@@ -297,10 +297,10 @@ int PPF3DDetector::trainModel(const Mat &PC)
                 hashtableInsertHashed(hashTable, hashValue, (void*)hashNode);
                 
                 float* ppfRow = (float*)(&(PPF.data[ ppfInd ]));
-                ppfRow[0] = f[0];
-                ppfRow[1] = f[1];
-                ppfRow[2] = f[2];
-                ppfRow[3] = f[3];
+                ppfRow[0] = (float)f[0];
+                ppfRow[1] = (float)f[1];
+                ppfRow[2] = (float)f[2];
+                ppfRow[3] = (float)f[3];
                 ppfRow[4] = (float)alpha;
             }
         }
@@ -487,12 +487,13 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
     }
     
     CV_Assert(pc.type() == CV_32F || pc.type() == CV_32FC1);
+	CV_Assert(RelativeSceneSampleStep<=1 && RelativeSceneSampleStep>0);
     
-    SceneSampleStep = 1.0/RelativeSceneSampleStep;
+    SceneSampleStep = (int)(1.0/RelativeSceneSampleStep);
     
     //int numNeighbors = 10;
     int numAngles = (int) (floor (2 * M_PI / angle_step));
-    float distanceStep = distance_step;
+    float distanceStep = (float)distance_step;
     unsigned int n = num_ref_points;
     Pose3D** poseList;
     int sceneSamplingStep = SceneSampleStep;
@@ -507,7 +508,7 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
     float dz = zRange[1] - zRange[0];
     float diameter = sqrt ( dx * dx + dy * dy + dz * dz );
     float distanceSampleStep = diameter * RelativeSceneDistance;*/
-    Mat sampled = samplePCByQuantization(pc, xRange, yRange, zRange, RelativeSceneDistance,1);
+    Mat sampled = samplePCByQuantization(pc, xRange, yRange, zRange, (float)RelativeSceneDistance,1);
     
     // allocate the accumulator : Moved this to the inside of the loop
     /*#if !defined (T_OPENMP)
