@@ -48,12 +48,36 @@ namespace cv
 namespace ppf_match_3d
 {
 
+/**
+ *  \brief Load a PLY file
+ *
+ *  \param [in] fileName The PLY model to read
+ *  \param [in] withNormals Flag wheather the input PLY contains normal information, 
+ *  and whether it should be loaded or not
+ *  \return Returns the matrix on successfull load
+ */
 CV_EXPORTS cv::Mat loadPLYSimple(const char* fileName, int withNormals);
-void writePLY(cv::Mat PC, const char* FileName);
+
+/**
+ *  \brief Write a point cloud to PLY file
+ *  \param [in] fileName The PLY model file to write
+*/
+CV_EXPORTS void writePLY(cv::Mat PC, const char* fileName);
 
 cv::Mat samplePCUniform(cv::Mat PC, int sampleStep);
 cv::Mat samplePCUniformInd(cv::Mat PC, int sampleStep, std::vector<int>& indices);
-cv::Mat samplePCByQuantization(cv::Mat pc, float xrange[2], float yrange[2], float zrange[2], float sample_step_relative, int weightByCenter=0);
+
+/**
+ *  \brief Sample a point cloud using uniform steps
+ *  \param [in] xrange X components (min and max) of the bounding box of the model
+ *  \param [in] yrange Y components (min and max) of the bounding box of the model
+ *  \param [in] zrange Z components (min and max) of the bounding box of the model
+ *  \param [in] sample_step_relative The point cloud is sampled such that all points
+ *  have a certain minimum distance. This minimum distance is determined relatively using
+ *  the parameter sample_step_relative. 
+ *  \return Sampled point cloud
+*/
+CV_EXPORTS cv::Mat samplePCByQuantization(cv::Mat pc, float xrange[2], float yrange[2], float zrange[2], float sample_step_relative, int weightByCenter=0);
 
 void computeBboxStd(cv::Mat pc, float xRange[2], float yRange[2], float zRange[2]);
 
@@ -66,8 +90,8 @@ cv::Mat normalizePCCoeff(cv::Mat pc, float scale, float* Cx, float* Cy, float* C
 cv::Mat transPCCoeff(cv::Mat pc, float scale, float Cx, float Cy, float Cz, float MinVal, float MaxVal);
 CV_EXPORTS cv::Mat transformPCPose(cv::Mat pc, double Pose[16]);
 
-void getRandomPose(double Pose[16]);
-cv::Mat addNoisePC(cv::Mat pc, double scale);
+CV_EXPORTS void getRandomPose(double Pose[16]);
+CV_EXPORTS cv::Mat addNoisePC(cv::Mat pc, double scale);
 
 /**
  *  \brief Compute the normals of an arbitrary point cloud
