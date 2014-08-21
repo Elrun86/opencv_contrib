@@ -502,11 +502,11 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
     computeBboxStd(pc, xRange, yRange, zRange);
     
     // sample the point cloud
-    float dx = xRange[1] - xRange[0];
+    /*float dx = xRange[1] - xRange[0];
     float dy = yRange[1] - yRange[0];
     float dz = zRange[1] - zRange[0];
-    //float diameter = sqrt ( dx * dx + dy * dy + dz * dz );
-    //float distanceSampleStep = diameter * RelativeSceneDistance;
+    float diameter = sqrt ( dx * dx + dy * dy + dz * dz );
+    float distanceSampleStep = diameter * RelativeSceneDistance;*/
     Mat sampled = samplePCByQuantization(pc, xRange, yRange, zRange, RelativeSceneDistance,1);
     
     // allocate the accumulator : Moved this to the inside of the loop

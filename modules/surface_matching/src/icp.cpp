@@ -47,7 +47,6 @@ namespace ppf_match_3d
 static void subtractColumns(Mat srcPC, double mean[3])
 {
     int height = srcPC.rows;
-    int width = srcPC.cols;
     
     for (int i=0; i<height; i++)
     {
@@ -64,7 +63,6 @@ static void subtractColumns(Mat srcPC, double mean[3])
 static void computeMeanCols(Mat srcPC, double mean[3])
 {
     int height = srcPC.rows;
-    int width = srcPC.cols;
     
     double mean1=0, mean2 = 0, mean3 = 0;
     
@@ -88,17 +86,16 @@ static void computeMeanCols(Mat srcPC, double mean[3])
 }
 
 // as in PCA
-static void subtractMeanFromColumns(Mat srcPC, double mean[3])
+/*static void subtractMeanFromColumns(Mat srcPC, double mean[3])
 {
     computeMeanCols(srcPC, mean);
     subtractColumns(srcPC, mean);
-}
+}*/
 
 // compute the average distance to the origin
 static double computeDistToOrigin(Mat srcPC)
 {
     int height = srcPC.rows;
-    int width = srcPC.cols;
     double dist = 0;
     
     for (int i=0; i<height; i++)
@@ -338,14 +335,14 @@ int ICP::registerModelToScene(const Mat& srcPC, const Mat& dstPC, double& Residu
     for (int level = m_numLevels-1; level >=0; level--)
     {
         const double impact = 2;
-        double div = pow((double)2, (double)level);
-        double div2 = div*div;
+        double div = pow((double)impact, (double)level);
+        //double div2 = div*div;
         const int numSamples = cvRound((double)(n/(div)));
         const double TolP = m_tolerence*(double)(level+1)*(level+1);
         const int MaxIterationsPyr = cvRound((double)m_maxItereations/(level+1));
         
         // Obtain the sampled point clouds for this level: Also rotates the normals
-        Mat srcPC = transformPCPose(srcPC0, Pose);
+        Mat srcPCT = transformPCPose(srcPC0, Pose);
         
         const int sampleStep = cvRound((double)n/(double)numSamples);
         std::vector<int> srcSampleInd;
@@ -359,12 +356,12 @@ int ICP::registerModelToScene(const Mat& srcPC, const Mat& dstPC, double& Residu
         
         Also note that you have to compute a KD-tree for each level.
         */
-        srcPC = samplePCUniformInd(srcPC, sampleStep, srcSampleInd);
+        srcPCT = samplePCUniformInd(srcPCT, sampleStep, srcSampleInd);
         
         double fval_old=9999999999;
         double fval_perc=0;
         double fval_min=9999999999;
-        Mat Src_Moved = srcPC.clone();
+        Mat Src_Moved = srcPCT.clone();
         
         int i=0;
         
@@ -461,20 +458,20 @@ int ICP::registerModelToScene(const Mat& srcPC, const Mat& dstPC, double& Residu
             if (selInd)
             {
             
-                Mat Src_Match = Mat(selInd, srcPC.cols, CV_64F);
-                Mat Dst_Match = Mat(selInd, srcPC.cols, CV_64F);
+                Mat Src_Match = Mat(selInd, srcPCT.cols, CV_64F);
+                Mat Dst_Match = Mat(selInd, srcPCT.cols, CV_64F);
                 
                 for (di=0; di<selInd; di++)
                 {
                     const int indModel = indicesModel[di];
                     const int indScene = indicesScene[di];
-                    const float *srcPt = (float*)&srcPC.data[indModel*srcPC.step];
+                    const float *srcPt = (float*)&srcPCT.data[indModel*srcPCT.step];
                     const float *dstPt = (float*)&dstPC0.data[indScene*dstPC0.step];
                     double *srcMatchPt = (double*)&Src_Match.data[di*Src_Match.step];
                     double *dstMatchPt = (double*)&Dst_Match.data[di*Dst_Match.step];
                     int ci=0;
                     
-                    for (ci=0; ci<srcPC.cols; ci++)
+                    for (ci=0; ci<srcPCT.cols; ci++)
                     {
                         srcMatchPt[ci] = (double)srcPt[ci];
                         dstMatchPt[ci] = (double)dstPt[ci];
@@ -485,7 +482,7 @@ int ICP::registerModelToScene(const Mat& srcPC, const Mat& dstPC, double& Residu
                 minimizePointToPlaneMetric(Src_Match, Dst_Match, X);
                 
                 getTransformMat(X, PoseX);
-                Src_Moved = transformPCPose(srcPC, PoseX);
+                Src_Moved = transformPCPose(srcPCT, PoseX);
                 
                 double fval = cv::norm(Src_Match, Dst_Match)/(double)(Src_Moved.rows);
                 
