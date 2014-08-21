@@ -61,20 +61,6 @@ size_t hash( unsigned int a)
     return a;
 }
 
-
-//
-//static size_t def_hashfunc(int key)
-//{
-//  size_t c2=0x27d4eb2d; // a prime or an odd constant
-//  key = (key ^ 61) ^ (key >>> 16);
-//  key = key + (key << 3);
-//  key = key ^ (key >>> 4);
-//  key = key * c2;
-//  key = key ^ (key >>> 15);
-//  return key;
-//}
-
-
 hashtable_int *hashtableCreate(size_t size, size_t (*hashfunc)(unsigned int))
 {
     hashtable_int *hashtbl;

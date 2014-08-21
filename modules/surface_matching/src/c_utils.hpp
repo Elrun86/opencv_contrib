@@ -659,7 +659,15 @@ static inline void dcmToQuat(double *R, double *q)
     R[7] = 2.0 * (tmp1 - tmp2);
 }
 
-
+/**
+ *  @brief Analytical solution to find the eigenvector corresponding to the smallest
+ *  eigenvalue of a 3x3 matrix. As this implements the analytical solution, it's not
+ *  really the most robust way. Whenever possible, this implementation can be replaced
+ *  via a robust numerical scheme. 
+ *  @param [in] C The matrix
+ *  @param [in] A The eigenvector corresponding to the lowest eigenvalue
+ *  @author Tolga Birdal
+ */
 static inline void eigenLowest33(const double C[3][3], double A[3])
 {
     const double a = C[0][0];
