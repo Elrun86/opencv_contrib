@@ -230,6 +230,7 @@ Mat samplePCByQuantization(Mat pc, float xrange[2], float yrange[2], float zrang
     
     map.resize((numSamplesDim+1)*(numSamplesDim+1)*(numSamplesDim+1));
     
+	// OpenMP might seem like a good idea, but it didn't speed this up for me
     //#pragma omp parallel for
     for (int i=0; i<pc.rows; i++)
     {
@@ -286,11 +287,15 @@ Mat samplePCByQuantization(Mat pc, float xrange[2], float yrange[2], float zrang
                     const double dz = point[2]-zc;
                     const double d = sqrt(dx*dx+dy*dy+dz*dz);
                     double w = 0;
-                    // exp( - (distance/h)**2 )
-                    //const double w = exp(-d*d);
                     
                     if (d>EPS)
+					{
+						// it is possible to use different weighting schemes.
+						// inverse weigthing was just good for me
+						// exp( - (distance/h)**2 )
+						//const double w = exp(-d*d);
                         w = 1.0/d;
+					}
                         
                     //float weights[3]={1,1,1};
                     px += w*(double)point[0];
@@ -496,7 +501,6 @@ Mat transformPCPose(Mat pc, double Pose[16])
         
         // Rotate the normals, too
         double n[3] = {(double)n1[0], (double)n1[1], (double)n1[2]}, n2[3];
-        //matrixProduct441(Pose, n, n2);
         
         matrixProduct331(R, n, n2);
         double nNorm = sqrt(n2[0]*n2[0]+n2[1]*n2[1]+n2[2]*n2[2]);
@@ -652,7 +656,6 @@ void meanCovLocalPCInd(const float* pc, const int* Indices, const int ws, const 
     
 }
 
-
 CV_EXPORTS int computeNormalsPC3d(const Mat& PC, Mat& PCNormals, const int NumNeighbors, const bool FlipViewpoint, const double viewpoint[3])
 {
     int i;
@@ -663,7 +666,6 @@ CV_EXPORTS int computeNormalsPC3d(const Mat& PC, Mat& PCNormals, const int NumNe
         CV_Error(cv::Error::BadImageSize, "PC should have 3 or 6 elements in its columns");
     }
     
-    //size_t steps[2] = {1, 3};
     int sizes[2] = {PC.rows, 3};
     int sizesResult[2] = {PC.rows, NumNeighbors};
     float* dataset = new float[PC.rows*3];

@@ -92,6 +92,8 @@ static int hashPPF(const double f[4], const double AngleStep, const double Dista
     return hashKey;
 }*/
 
+// computes the alpha as in Drost 2010 paper: The transformation to the ground plane with
+// a rotation around x
 static double computeAlpha(const double p1[4], const double n1[4], const double p2[4])
 {
     double Tmg[3], mpt[3], row2[3], row3[3], alpha;
@@ -232,7 +234,7 @@ int PPF3DDetector::trainModel(const Mat &PC)
 {
     CV_Assert(PC.type() == CV_32F || PC.type() == CV_32FC1);
     
-    // compute bbox
+    // compute the bounding box
     float xRange[2], yRange[2], zRange[2];
     computeBboxStd(PC, xRange, yRange, zRange);
     
@@ -242,6 +244,7 @@ int PPF3DDetector::trainModel(const Mat &PC)
     float dz = zRange[1] - zRange[0];
     float diameter = sqrt ( dx * dx + dy * dy + dz * dz );
     
+	// the sampling distance is based relatively on the diameter
     float distanceStep = (float)(diameter * samplingStepRelative);
     
     Mat sampled = samplePCByQuantization(PC, xRange, yRange, zRange, (float)samplingStepRelative,0);
@@ -275,7 +278,7 @@ int PPF3DDetector::trainModel(const Mat &PC)
         //printf("///////////////////// NEW REFERENCE ////////////////////////\n");
         for (int j=0; j<numRefPoints; j++)
         {
-            // cannnot compute the ppf with myself
+            // should not compute the ppf with myself
             if (i!=j)
             {
                 float* f2 = (float*)(&sampled.data[j * sampledStep]);
@@ -342,7 +345,7 @@ int PPF3DDetector::clusterPoses(Pose3D** poseList, int numPoses, std::vector<Pos
     
     finalPoses.clear();
     
-    // sort the poses for stability
+    // sort the poses for stability: Best pose becomes the origin of cluster
     qsort(poseList, numPoses, sizeof(Pose3D*), qsortPoseCmp);
     
     for (int i=0; i<numPoses; i++)
@@ -502,7 +505,7 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
     float xRange[2], yRange[2], zRange[2];
     computeBboxStd(pc, xRange, yRange, zRange);
     
-    // sample the point cloud
+    // sample the point cloud: We won't use 
     /*float dx = xRange[1] - xRange[0];
     float dy = yRange[1] - yRange[0];
     float dz = zRange[1] - zRange[0];

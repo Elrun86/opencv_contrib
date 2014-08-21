@@ -137,8 +137,6 @@ void Pose3D::updatePoseQuat(double Q[4], double NewT[3])
     q[2]=Q[2];
     q[3]=Q[3];
     
-    //for (int i=0; i<16; i++)
-    // Pose[i]=NewPose[i];
     Pose[0]=NewR[0];
     Pose[1]=NewR[1];
     Pose[2]=NewR[2];
@@ -164,6 +162,7 @@ void Pose3D::updatePoseQuat(double Q[4], double NewT[3])
         angle = 0;
     }
     else
+	{
         if (fabs(trace + 1) <= EPS)
         {
             angle = M_PI;
@@ -172,6 +171,7 @@ void Pose3D::updatePoseQuat(double Q[4], double NewT[3])
         {
             angle = ( acos((trace - 1)/2) );
         }
+	}
 }
 
 

@@ -64,6 +64,8 @@ namespace ppf_match_3d
 * The task is to register a 3D model (or point cloud) against a set of noisy target data. The variants are put together
 * by myself after certain tests. The task is to be able to match partial, noisy point clouds in cluttered scenes, quickly.
 * You will find that my emphasis is on the performance, while retaining the accuracy.
+* This implementation is based on Tolga Birdal's MATLAB implementation in here:
+* http://www.mathworks.com/matlabcentral/fileexchange/47152-icp-registration-using-efficient-variants-and-multi-resolution-scheme
  The main contributions come from:
  1. Picky ICP:
  http://www5.informatik.uni-erlangen.de/Forschung/Publikationen/2003/Zinsser03-ARI.pdf
@@ -74,10 +76,7 @@ namespace ppf_match_3d
  http://www.cvl.iis.u-tokyo.ac.jp/~oishi/Papers/Alignment/Jost_MultiResolutionICP_3DIM03.pdf
  5. Linearization of Point-to-Plane metric by Kok Lim Low:
  https://www.comp.nus.edu.sg/~lowkl/publications/lowk_point-to-plane_icp_techrep.pdf
- Note that the test function requires Gabriel Peyré's read_ply m-file in here:
- http://www.mathworks.com/matlabcentral/fileexchange/5355-toolbox-graph/content/toolbox_graph/read_ply.m
-* Typical Use:
-*/
+ */
 class CV_EXPORTS ICP
 {
     public:

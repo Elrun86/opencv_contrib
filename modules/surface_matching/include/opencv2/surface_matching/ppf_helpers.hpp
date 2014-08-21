@@ -87,12 +87,42 @@ void* indexPCFlann(cv::Mat pc);
 void destroyFlann(void* flannIndex);
 void queryPCFlann(void* flannIndex, cv::Mat& pc, cv::Mat& indices, cv::Mat& distances);
 
+/**
+ *  Mostly for visualization purposes. Normalizes the point cloud in a Hartley-Zissermann
+ *  fashion. In other words, the point cloud is centered, and scaled such that the largest
+ *  distance from the origin is sqrt(2). Finally a rescaling is applied.
+ *  @param [in] pc Input point cloud (CV_32F family). Point clouds with 3 or 6 elements per
+ *  row are expected.
+ *  @param [in] scale The scale after normalization. Default to 1.
+ *  \return Normalized point cloud
+*/
 CV_EXPORTS cv::Mat normalize_pc(cv::Mat pc, float scale);
+
 cv::Mat normalizePCCoeff(cv::Mat pc, float scale, float* Cx, float* Cy, float* Cz, float* MinVal, float* MaxVal);
 cv::Mat transPCCoeff(cv::Mat pc, float scale, float Cx, float Cy, float Cz, float MinVal, float MaxVal);
+
+/**
+ *  Transforms the point cloud with a given a homogeneous 4x4 pose matrix (in double precision)
+ *  @param [in] pc Input point cloud (CV_32F family). Point clouds with 3 or 6 elements per
+ *  row are expected. In the case where the normals are provided, they are also rotated to be
+ *  compatible with the entire transformation
+ *  @param [in] Pose 4x4 pose matrix, but linearized in row-major form.
+ *  \return Transformed point cloud
+*/
 CV_EXPORTS cv::Mat transformPCPose(cv::Mat pc, double Pose[16]);
 
+/**
+ *  Generate a random 4x4 pose matrix
+ *  @param [out] Pose The random pose
+*/
 CV_EXPORTS void getRandomPose(double Pose[16]);
+
+/**
+ *  Adds a uniform noise in the given scale to the input point cloud
+ *  @param [in] pc Input point cloud (CV_32F family). 
+ *  @param [in] scale Input scale of the noise. The larger the scale, the more
+ *  noisy the output
+*/
 CV_EXPORTS cv::Mat addNoisePC(cv::Mat pc, double scale);
 
 /**

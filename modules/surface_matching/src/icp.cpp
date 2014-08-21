@@ -486,7 +486,7 @@ int ICP::registerModelToScene(const Mat& srcPC, const Mat& dstPC, double& Residu
                 
                 double fval = cv::norm(Src_Match, Dst_Match)/(double)(Src_Moved.rows);
                 
-                // Calculate change in error between itterations
+                // Calculate change in error between iterations
                 fval_perc=fval/fval_old;
                 
                 // Store error value
@@ -526,7 +526,7 @@ int ICP::registerModelToScene(const Mat& srcPC, const Mat& dstPC, double& Residu
     Pose[7] = Pose[7]/scale + meanAvg[1];
     Pose[11] = Pose[11]/scale + meanAvg[2];
     
-    //Pose(1:3, 4) = Pose(1:3, 4)./scale + meanAvg' - Pose(1:3, 1:3)*meanAvg';
+    // In MATLAB this would be : Pose(1:3, 4) = Pose(1:3, 4)./scale + meanAvg' - Pose(1:3, 1:3)*meanAvg';
     double Rpose[9], Cpose[3];
     poseToR(Pose, Rpose);
     matrixProduct331(Rpose, meanAvg, Cpose);
