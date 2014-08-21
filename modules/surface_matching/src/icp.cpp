@@ -280,10 +280,10 @@ static void getTransformMat(Mat X, double Pose[16])
 duplicates is pre-allocated
 make sure that the max element in array will not exceed maxElement
 */
-static hashtable_int* getHashtable(int* data, int length, int numMaxElement)
+static hashtable_int* getHashtable(int* data, size_t length, int numMaxElement)
 {
     hashtable_int* hashtable = hashtableCreate(static_cast<size_t>(numMaxElement*2), 0);
-    for (int i = 0; i < length; i++)
+    for (size_t i = 0; i < length; i++)
     {
         const KeyType key = (KeyType)data[i];
         hashtableInsertHashed(hashtable, key+1, reinterpret_cast<void*>(i+1));
@@ -391,8 +391,8 @@ int ICP::registerModelToScene(const Mat& srcPC, const Mat& dstPC, double& Residu
             
             for (di=0; di<numElSrc; di++)
             {
-                newI[di]=di;
-                newJ[di]=indices[di];
+                newI[di] = (int)di;
+                newJ[di] = indices[di];
             }
             
             if (UseRobustReject)
@@ -458,8 +458,8 @@ int ICP::registerModelToScene(const Mat& srcPC, const Mat& dstPC, double& Residu
             if (selInd)
             {
             
-                Mat Src_Match = Mat(selInd, srcPCT.cols, CV_64F);
-                Mat Dst_Match = Mat(selInd, srcPCT.cols, CV_64F);
+                Mat Src_Match = Mat((int)selInd, srcPCT.cols, CV_64F);
+                Mat Dst_Match = Mat((int)selInd, srcPCT.cols, CV_64F);
                 
                 for (di=0; di<selInd; di++)
                 {

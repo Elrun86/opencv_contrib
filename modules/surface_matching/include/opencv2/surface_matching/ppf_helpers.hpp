@@ -68,13 +68,15 @@ cv::Mat samplePCUniform(cv::Mat PC, int sampleStep);
 cv::Mat samplePCUniformInd(cv::Mat PC, int sampleStep, std::vector<int>& indices);
 
 /**
- *  \brief Sample a point cloud using uniform steps
- *  \param [in] xrange X components (min and max) of the bounding box of the model
- *  \param [in] yrange Y components (min and max) of the bounding box of the model
- *  \param [in] zrange Z components (min and max) of the bounding box of the model
- *  \param [in] sample_step_relative The point cloud is sampled such that all points
+ *  Sample a point cloud using uniform steps
+ *  @param [in] xrange X components (min and max) of the bounding box of the model
+ *  @param [in] yrange Y components (min and max) of the bounding box of the model
+ *  @param [in] zrange Z components (min and max) of the bounding box of the model
+ *  @param [in] sample_step_relative The point cloud is sampled such that all points
  *  have a certain minimum distance. This minimum distance is determined relatively using
  *  the parameter sample_step_relative. 
+ *  @param [in] weightByCenter The contribution of the quantized data points can be weighted
+ *  by the distance to the origin. This parameter enables/disables the use of weighting.
  *  \return Sampled point cloud
 */
 CV_EXPORTS cv::Mat samplePCByQuantization(cv::Mat pc, float xrange[2], float yrange[2], float zrange[2], float sample_step_relative, int weightByCenter=0);
@@ -96,10 +98,10 @@ CV_EXPORTS cv::Mat addNoisePC(cv::Mat pc, double scale);
 /**
  *  \brief Compute the normals of an arbitrary point cloud
  *
- *  \param [in] PC Input point cloud to compute the normals for.
- *  \param [in] PCNormals Output point cloud
- *  \param [in] NumNeighbors Number of neighbors to take into account in a local region
- *  \param [in] FlipViewpoint Should normals be flipped to a viewing direction?
+ *  @param [in] PC Input point cloud to compute the normals for.
+ *  @param [in] PCNormals Output point cloud
+ *  @param [in] NumNeighbors Number of neighbors to take into account in a local region
+ *  @param [in] FlipViewpoint Should normals be flipped to a viewing direction?
  *  \return Returns 0 on success
  *
  *  \details computeNormalsPC3d uses a plane fitting approach to smoothly compute

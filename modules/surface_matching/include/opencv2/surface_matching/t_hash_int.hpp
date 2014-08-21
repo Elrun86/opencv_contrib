@@ -84,12 +84,12 @@ __inline static unsigned int next_power_of_two(unsigned int value)
 
 hashtable_int *hashtableCreate(size_t size, size_t (*hashfunc)(unsigned int));
 void hashtableDestroy(hashtable_int *hashtbl);
-unsigned int hashtableInsert(hashtable_int *hashtbl, KeyType key, void *data);
-unsigned int hashtableInsertHashed(hashtable_int *hashtbl, KeyType key, void *data);
-unsigned int hashtableRemove(hashtable_int *hashtbl, KeyType key);
+int hashtableInsert(hashtable_int *hashtbl, KeyType key, void *data);
+int hashtableInsertHashed(hashtable_int *hashtbl, KeyType key, void *data);
+int hashtableRemove(hashtable_int *hashtbl, KeyType key);
 void *hashtableGet(hashtable_int *hashtbl, KeyType key);
 hashnode_i* hashtableGetBucketHashed(hashtable_int *hashtbl, KeyType key);
-unsigned int hashtableResize(hashtable_int *hashtbl, size_t size);
+int hashtableResize(hashtable_int *hashtbl, size_t size);
 hashtable_int *hashtable_int_clone(hashtable_int *hashtbl);
 hashtable_int *hashtableRead(FILE* f);
 int hashtableWrite(const hashtable_int * hashtbl, const size_t dataSize, FILE* f);

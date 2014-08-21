@@ -128,7 +128,7 @@ void hashtableDestroy(hashtable_int *hashtbl)
 }
 
 
-unsigned int hashtableInsert(hashtable_int *hashtbl, KeyType key, void *data)
+int hashtableInsert(hashtable_int *hashtbl, KeyType key, void *data)
 {
     struct hashnode_i *node;
     size_t hash=hashtbl->hashfunc(key)%hashtbl->size;
@@ -160,7 +160,7 @@ unsigned int hashtableInsert(hashtable_int *hashtbl, KeyType key, void *data)
     return 0;
 }
 
-unsigned int hashtableInsertHashed(hashtable_int *hashtbl, KeyType key, void *data)
+int hashtableInsertHashed(hashtable_int *hashtbl, KeyType key, void *data)
 {
     struct hashnode_i *node;
     size_t hash = key % hashtbl->size;
@@ -193,7 +193,7 @@ unsigned int hashtableInsertHashed(hashtable_int *hashtbl, KeyType key, void *da
 }
 
 
-unsigned int hashtableRemove(hashtable_int *hashtbl, KeyType key)
+int hashtableRemove(hashtable_int *hashtbl, KeyType key)
 {
     struct hashnode_i *node, *prevnode=NULL;
     size_t hash=hashtbl->hashfunc(key)%hashtbl->size;
@@ -243,7 +243,7 @@ hashnode_i* hashtableGetBucketHashed(hashtable_int *hashtbl, KeyType key)
     return hashtbl->nodes[hash];
 }
 
-unsigned int hashtableResize(hashtable_int *hashtbl, size_t size)
+int hashtableResize(hashtable_int *hashtbl, size_t size)
 {
     hashtable_int newtbl;
     size_t n;
@@ -320,7 +320,6 @@ void hashtablePrint(hashtable_int *hashtbl)
         for (node=hashtbl->nodes[n]; node; node=next)
         {
             next = node->next;
-            //printf("Key : %d, Data : %d\n", node->key, reinterpret_cast<int>(node->data));
 			std::cout<<"Key : "<<node->key<<", Data : "<<node->data<<std::endl;
         }
     }
