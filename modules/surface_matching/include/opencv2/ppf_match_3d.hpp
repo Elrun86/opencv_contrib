@@ -49,7 +49,7 @@
 Model Globally, Match Locally: Efficient and Robust 3D Object Recognition
 IEEE Computer Society Conference on Computer Vision and Pattern Recognition (CVPR), San Francisco, California (USA), June 2010.
 ***/
-// Author: Tolga Birdal
+// Author: Tolga Birdal  <tbirdal AT gmail.com>
 
 
 #ifndef __OPENCV_OBJDETECT_PPF_3D_HPP__
