@@ -271,16 +271,16 @@ int Pose3D::readPose(FILE* f)
 {
     int POSE_MAGIC = 7673, magic;
     
-    fread(&magic, sizeof(int), 1, f);
-    if (magic == POSE_MAGIC)
+    size_t status = fread(&magic, sizeof(int), 1, f);
+    if (status && magic == POSE_MAGIC)
     {
-        fread(&angle, sizeof(double), 1, f);
-        fread(&numVotes, sizeof(int), 1, f);
-        fread(&modelIndex, sizeof(int), 1, f);
-        fread(Pose, sizeof(double)*16, 1, f);
-        fread(t, sizeof(double)*3, 1, f);
-        fread(q, sizeof(double)*4, 1, f);
-        fread(&residual, sizeof(double), 1, f);
+        status = fread(&angle, sizeof(double), 1, f);
+        status = fread(&numVotes, sizeof(int), 1, f);
+        status = fread(&modelIndex, sizeof(int), 1, f);
+        status = fread(Pose, sizeof(double)*16, 1, f);
+        status = fread(t, sizeof(double)*3, 1, f);
+        status = fread(q, sizeof(double)*4, 1, f);
+        status = fread(&residual, sizeof(double), 1, f);
         return 0;
     }
     
@@ -339,15 +339,16 @@ int PoseCluster3D::writePoseCluster(FILE* f)
 int PoseCluster3D::readPoseCluster(FILE* f)
 {
     int POSE_CLUSTER_MAGIC_IO = 8462597;
-    int magic=0, numPoses=0;
-    fwrite(&magic, sizeof(int), 1, f);
+    int magic=0, numPoses=0, status;
+    status = fread(&magic, sizeof(int), 1, f);
     
-    if (magic==POSE_CLUSTER_MAGIC_IO)
+    if (!status || magic!=POSE_CLUSTER_MAGIC_IO)
         return -1;
         
-    fread(&id, sizeof(int), 1, f);
-    fread(&numVotes, sizeof(int), 1, f);
-    fread(&numPoses, sizeof(int), 1, f);
+    status = fread(&id, sizeof(int), 1, f);
+    status = fread(&numVotes, sizeof(int), 1, f);
+    status = fread(&numPoses, sizeof(int), 1, f);
+	fclose(f);
     
     poseList.clear();
     poseList.resize(numPoses);
