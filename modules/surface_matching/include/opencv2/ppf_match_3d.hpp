@@ -102,48 +102,43 @@ class CV_EXPORTS PPF3DDetector
         
         /**
         * Constructor with arguments
-        * @param [in] RelativeSamplingStep Set the sampling distance for the pose refinement relative to the object's diameter. Decreasing this value leads to a more accurate pose refinement but a larger model and slower model generation and refinement. Increasing the value leads to a less accurate pose refinement but a smaller model and faster model generation and matching. Beware of the memory consumption when using large values.
-        * @param [in] RelativeDistanceStep Set the discretization distance of the point pair distance relative to the model's diameter. This value should default to the value of RelativeSamplingStep. For noisy scenes, the value can be increased to improve the robustness of the matching against noisy points.
-        * @param [in] Set the discretization of the point pair orientation as the number of subdivisions of the angle. Increasing the value increases the precision of the matching but decreases the robustness against incorrect normal directions. Decreasing the value decreases the precision of the matching but increases the robustness against incorrect normal directions. For very noisy scenes where the normal directions can not be computed accurately, the value can be set to 25 or 20.
+        * @param [in] relativeSamplingStep Sampling distance relative to the object's diameter. Models are first sampled uniformly in order to improve efficiency. Decreasing this value leads to a denser model, and a more accurate pose estimation but the larger the model, the slower the training. Increasing the value leads to a less accurate pose computation but a smaller model and faster model generation and matching. Beware of the memory consumption when using small values.
+        * @param [in] relativeDistanceStep The discretization distance of the point pair distance relative to the model's diameter. This value has a direct impact on the hashtable. Using small values would lead to too fine discretization, and thus ambiguity in the bins of hashtable. Too large values would lead to no discrimination over the feature vectors and different point pair features would be assigned to the same bin. This argument defaults to the value of RelativeSamplingStep. For noisy scenes, the value can be increased to improve the robustness of the matching against noisy points.
+        * @param [in] numAngles Set the discretization of the point pair orientation as the number of subdivisions of the angle. This value is the equivalent of RelativeDistanceStep for the orientations. Increasing the value increases the precision of the matching but decreases the robustness against incorrect normal directions. Decreasing the value decreases the precision of the matching but increases the robustness against incorrect normal directions. For very noisy scenes where the normal directions can not be computed accurately, the value can be set to 25 or 20.
         */
-        PPF3DDetector(const double RelativeSamplingStep, const double RelativeDistanceStep=0.05, const double NumAngles=30);
+        PPF3DDetector(const double relativeSamplingStep, const double relativeDistanceStep=0.05, const double numAngles=30);
         
         virtual ~PPF3DDetector();
         
         /**
-        *  Set the parameters for the search    *
+        *  Set the parameters for the search
         *  @param [in] numPoses The maximum number of poses to return
-        *  @param [in] positionThreshold Position threshold controlling the similarity of translations. Depends on the units of calibration.
+        *  @param [in] positionThreshold Position threshold controlling the similarity of translations. Depends on the units of calibration/model.
         *  @param [in] rotationThreshold Position threshold controlling the similarity of rotations. This parameter can be perceived as a threshold over the difference of angles
         *  @param [in] minMatchScore Not used at the moment
-        *  @param [in] useWeightedClustering The algorithm by default clusters the poses without waiting. A non-zero value would indicate that the pose clustering should take into account the number of votes as the weights and perform a weighted averaging instead of a simple one.
-        *  \return No return value is available.
-        *
+        *  @param [in] useWeightedClustering The algorithm by default clusters the poses without weighting. A non-zero value would indicate that the pose clustering should take into account the number of votes as the weights and perform a weighted averaging instead of a simple one.
         */
         void SetSearchParams(const int numPoses=5, const double positionThreshold=-1, const double rotationThreshold=-1, const double minMatchScore=0.5, const bool useWeightedClustering=false);
         
         /**
-        *  \brief Trains a new model.
+        *  \brief Trains a new model. 
         *
         *  @param [in] Model The input point cloud with normals (Nx6)
         *  \return Returns 0 on success.
         *
-        *  \details Uses the parameters set in the constructor to downsample and learn a new model
+        *  \details Uses the parameters set in the constructor to downsample and learn a new model. When the model is learnt, the instance gets ready for calling "match".
         */
         int trainModel(const Mat& Model);
         
         /**
-        *  \brief Brief
+        *  \brief Matches a trained model across a provided scene.
         *
-        *  @param [in] Scene Point cloud for the scene
+        *  @param [in] scene Point cloud for the scene
         *  @param [out] results List of output poses
-        *  @param [in] RelativeSceneSampleStep The ratio of scene points to be used for the matching. For example, if this value is set to 1.0/5.0, every 5th point from the scene is used for pose refinement. This parameter allows an easy tradeoff between speed and accuracy of the matching. Increasing the value leads to less points being used and in turn to a faster but less accurate pose computation. Decreasing the value has the inverse effect.
-        *  @param [in] RelativeSceneDistance Set the distance threshold relative to the diameter of the model. Only scene points that are closer to the object than this distance are used for the optimization. Scene points further away are ignored.
-        *  \return Return_Description
-        *
-        *  \details Details
+        *  @param [in] relativeSceneSampleStep The ratio of scene points to be used for the matching. For example, if this value is set to 1.0/5.0, every 5th point from the scene is used for pose estimation. This parameter allows an easy tradeoff between speed and accuracy of the matching. Increasing the value leads to less points being used and in turn to a faster but less accurate pose computation. Decreasing the value has the inverse effect.
+        *  @param [in] relativeSceneDistance Set the distance threshold relative to the diameter of the model. This parameter is equivalent to relativeDistanceStep in the training stage and for many applications they must be the same. 
         */
-        void match(const Mat& Scene, std::vector<Pose3D*>& results, const double RelativeSceneSampleStep=1.0/5.0, const double RelativeSceneDistance=0.03);
+        void match(const Mat& scene, std::vector<Pose3D*>& results, const double relativeSceneSampleStep=1.0/5.0, const double relativeSceneDistance=0.03);
         
         void read(const FileNode& fn);
         void write(FileStorage& fs) const;

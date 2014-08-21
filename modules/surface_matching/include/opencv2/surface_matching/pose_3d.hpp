@@ -48,6 +48,13 @@ namespace cv
 {
 namespace ppf_match_3d
 {
+/**
+* @class Pose3D
+* @brief Class, allowing the storage of a pose. The data structure stores both
+* the quaternions and the matrix forms. It supports IO functionality together with
+* various helper methods to work with poses
+*
+*/
 class CV_EXPORTS Pose3D
 {
     public:
@@ -114,6 +121,12 @@ class CV_EXPORTS Pose3D
         double Pose[16], angle, t[3], q[4];
 };
 
+/**
+* @class PoseCluster3D
+* @brief When multiple poses (see Pose3D) are grouped together (contribute to the same transformation) 
+* pose clusters occur. This class is a general container for such groups of poses. It is possible to store,
+* load and perform IO on these poses.
+*/
 class CV_EXPORTS PoseCluster3D
 {
     public:
@@ -147,7 +160,13 @@ class CV_EXPORTS PoseCluster3D
             //poseList.clear();
         };
         
+		/**        
+        *  \brief Adds a new pose to the cluster. The pose should be "close" to the mean poses
+        *  in order to preserve the consistency
+        *  \param [in] newPose Pose to add to the cluster
+        */
         void addPose(Pose3D* newPose) ;
+		
         int writePoseCluster(FILE* f);
         int readPoseCluster(FILE* f);
         int writePoseCluster(const std::string& FileName);

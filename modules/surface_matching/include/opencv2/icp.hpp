@@ -101,8 +101,8 @@ class CV_EXPORTS ICP
         virtual ~ICP() { }
 
         /**
-         *  \brief Brief
-         *  @param [in] tolerence tolerence parameter controls the accuracy of registration at each iteration of ICP.
+         *  \brief ICP constructor with default arguments.
+         *  @param [in] tolerence Controls the accuracy of registration at each iteration of ICP.
          *  @param [in] rejectionScale Robust outlier rejection is applied for robustness. This value actually corresponds to the standard deviation coefficient. Points with rejectionScale * \sigma are ignored during registration.
          *  @param [in] numLevels Number of pyramid levels to proceed. Deep pyramids increase speed but decrease accuracy. Too coarse pyramids might have computational overhead on top of the inaccurate registrtaion. This parameter should be chosen to optimize a balance. Typical values range from 4 to 10.
          *  @param [in] sampleType Currently this parameter is ignored and only uniform sampling is applied. Leave it as 0.
