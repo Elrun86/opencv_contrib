@@ -279,3 +279,4 @@ Results
 
 This section is dedicated to the results of point-pair-feature matching
 and a following ICP refinement.
+
