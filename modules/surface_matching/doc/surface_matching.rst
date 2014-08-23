@@ -319,7 +319,7 @@ You might checkout the video on `youTube here <http://www.youtube.com/watch?v=uF
 
 A Complete Sample
 =================
-.. literalinclude:: code/ppf_load_match.cpp
+.. literalinclude:: ../samples/ppf_load_match.cpp
    :language: cpp
    :linenos:
    :tab-width: 4
