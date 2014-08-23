@@ -1,0 +1,3 @@
+....
+.. |drost2010| replace:: :math:[1]
+.. |kokkimlow| replace:: :math:[2]
