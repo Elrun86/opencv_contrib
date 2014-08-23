@@ -1,34 +1,37 @@
+.. include:: math.rst
+
+.. _surfacematching:
+
+Introduction to Surface Matching
 **********************************************************
-surface_matching. Matching Surface Models Across 3D Scenes
-**********************************************************
 
-Computation of Point Pair Features (PPF)
-========================================
+Surface Matching
+================
 
-The state of the algorithms in order to achieve this task are heavily
-based on , which is one of the first and main practical methods
-presented in this area. This paper is also known to be incorporated into
-Halcon framework
-http://www.halcon.de/download/documentation/reference/create_surface_model.html
-The approach is composed of extracting 3D feature points randomly from
-depth images, indexing them and later in runtime querying them
-efficiently. Only the depth image is considered, and a trivial hash
-table is used for feature queries.
+Cameras and similar devices with the capability of sensation of 3D structure are getting more common everyday. Thus, using depth and intensity information for matching 3D objects (or parts) are of crucial importance for computer vision. Applications range from industrial control to guiding everyday actions for visually impaired people. The task in recognition and pose estimation in range images aims to identify and localize a queried 3D free-form object by matching it to the acquired database.
 
-While being fully aware that utilization of the nice CAD model structure
-in order to achieve a smart point sampling, I will be leaving that aside
-now in order to respect the generalizability of the methods (Typically
-for such algorithms training on a CAD model is not needed, and a point
-cloud would be sufficient).
+From an industrial perspective, enabling robots to automatically locate and pick up randomly placed and oriented objects from a bin is an important challenge in factory automation, replacing tedious and heavy manual labor. A system should be able to recognize and locate objects with a predefined shape and estimate the position with the precision necessary for a gripping robot to pick it up. This is where vision guided robotics takes the stage. Similar tools are also capable of guiding robots (and even people) through unstructured environments, leading to automated navigation. These properties make 3D matching from point clouds a ubiquitous necessity. Within this context, I will now describe OpenCV implementation of a 3D object recognition and pose estimation algorithm using 3D features.
 
-So the extracted features are as follows:
+Surface Matching Algorithm Through 3D Features
+==============================================
 
-.. math:: \bld{F}(\bld{m1}, \bld{m2}) = (||\bld{d}||_2, <(\bld{n1},\bld{d}), <(\bld{n2},\bld{d}), <(\bld{n1},\bld{n2}))
+The state of the algorithms in order to achieve the task 3D matching heavily based on [drost2010], which is one of the first and main practical methods presented in this area. The approach is composed of extracting 3D feature points randomly from depth images or generic point clouds, indexing them and later in runtime querying them efficiently. Only the 3D structure is considered, and a trivial hash table is used for feature queries.
 
-where :math:`\bld{m1}` and :math:`\bld{m2}` are feature two selected
-points on the model (or scene), :math:`\bld{d}` is the difference
-vector, :math:`\bld{n1}` and :math:`\bld{n2}` are the normals at
-:math:`\bld{m1}` and :math:`\bld{m2}`. During the training stage, this
+While being fully aware that utilization of the nice CAD model structure in order to achieve a smart point sampling, I will be leaving that aside now in order to respect the generalizability of the methods (Typically for such algorithms training on a CAD model is not needed, and a point cloud would be sufficient). Below is the outline of the entire algorithm:
+
+.. image:: resource/outline.jpg
+	:scale: 75 %
+	:align: center
+	:alt: Outline of the Algorithm
+
+As explained, the algorithm relies on the extraction and indexing of point pair features, which are defined as follows:
+
+.. math:: \bf{{F}}(\bf{{m1}}, \bf{{m2}}) = (||\bf{{d}}||_2, <(\bf{{n1}},\bf{{d}}), <(\bf{{n2}},\bf{{d}}), <(\bf{{n1}},\bf{{n2}}))
+
+where :math:`\bf{{m1}}` and :math:`\bf{{m2}}` are feature two selected
+points on the model (or scene), :math:`\bf{{d}}` is the difference
+vector, :math:`\bf{{n1}}` and :math:`\bf{{n2}}` are the normals at
+:math:`\bf{{m1}}` and :math:`\bf{m2}`. During the training stage, this
 vector is quantized, indexed. In the test stage, same features are
 extracted from the scene and compared to the database. With a few tricks
 like separation of the rotational components, the pose estimation part
@@ -43,9 +46,10 @@ of doing this (:math:`\theta = cos^{-1}({\bf{a}}\cdot{\bf{b}})` remains
 numerically unstable. A better way to do this is then use inverse
 tangents, like:
 
-.. math:: <(\bld{n1},\bld{n2})=tan^{-1}(\norm {\bld{n1}  \wedge \bld{n2}}, \bld{n1} \cdot \bld{n2}).
+.. math:: 
+	<(\bf{n1},\bf{n2})=tan^{-1}(||{\bf{n1}  \wedge \bf{n2}}||_2, \bf{n1} \cdot \bf{n2})
 
-Initial Computation of Object Pose Given PPF
+Rough Computation of Object Pose Given PPF
 ============================================
 
 Let me summarize the following notation:
@@ -81,58 +85,57 @@ Let me summarize the following notation:
 -  :math:`\theta_{m\rightarrow g}`: The angular component of the axis
    angle representation :math:`{\bf{R_{m\rightarrow g}}}`.
 
-Transforming a Point Pair Onto the Ground Plane
------------------------------------------------
+The transformation in a point pair feature is computed by first finding the transformation :math:`T_{m\rightarrow g}` from the first point, and applying the same transformation to the second one. Transforming each point, together with the normal, to the ground plane leaves us with an angle to find out, during a comparison with a new point pair.
 
-The transformation in a point pair feature is computed by first finding
-the transformation :math:`T_{m\rightarrow g}` from the first point, and
-applying the same transformation to the second one. Transforming each
-point, together with the normal, to the ground plane leaves us with an
-angle to find out, during a comparison with a new point pair.
-
-We could now simply start writing
+We could now simply start writing 
 
 .. math::
-
-   \begin{aligned}
-   (p^i_m)^{'} = T_{m\rightarrow g} p^i_m
-   \intertext{where}
-   T_{m\rightarrow g} = -t_{m\rightarrow g}R_{m\rightarrow g} 
-   \intertext{Note that this is nothing but a stacked transformation. The translational component $t_{m\rightarrow g}$ reads}
-   t_{m\rightarrow g} = -R_{m\rightarrow g}p^i_m
-   \intertext{and the rotational being}
-   \theta_{m\rightarrow g} = \cos^{-1}(n^i_m \cdot {\bf{x}})\\
-   {\bf{R_{m\rightarrow g}}} = n^i_m \wedge {\bf{x}}
-   \intertext{in axis angle format. Note that bold refers to the vector form.}\end{aligned}
-
-When the scene point :math:`p^i_s` is also transformed on the same plane
-as :math:`(p^i_m)^{'}`, the points will be misaligned by a rotational
-component :math:`\alpha`. For the sake of efficiency, the paper splits
-it into two components :math:`\alpha_s` and :math:`\alpha_m`.
-Respectively, these denote the rotations from the transformed scene to
-the :math:`x`-axis and from the transformed model to the :math:`x`-axis.
-Luckily, both :math:`\alpha_s` and :math:`\alpha_m` are subject to the
-same procedure of computation, which reads as follows:
+	(p^i_m)^{'} = T_{m\rightarrow g} p^i_m
+    
+where
 
 .. math::
+	T_{m\rightarrow g} = -t_{m\rightarrow g}R_{m\rightarrow g} 
 
-   \begin{aligned}
-   {3}
-   \alpha_m &= \tan^{-1}\left(\frac{-(p^j_m)^{'}_z}{(p^j_m)^{'}_y}\right) & \text{ for model}\\
-   \alpha_s &= \tan^{-1}\left(\frac{-(p^j_s)^{'}_z}{(p^j_s)^{'}_y}\right) & \text{ for scene}
-   \intertext{using the fact that on $x$-plane $x$=0.}\end{aligned}
+Note that this is nothing but a stacked transformation. The translational component :math:`t_{m\rightarrow g}` reads
 
-In the implementation, alphas are adjusted to be rotating towards
-:math:`0`.
+.. math::
+	t_{m\rightarrow g} = -R_{m\rightarrow g}p^i_m
+
+and the rotational being
+
+.. math::
+	\theta_{m\rightarrow g} = \cos^{-1}(n^i_m \cdot {\bf{x}})\\
+	{\bf{R_{m\rightarrow g}}} = n^i_m \wedge {\bf{x}}
+
+in axis angle format. Note that bold refers to the vector form. After this transformation, the feature vectors of the model are registered onto the ground plane X and the angle with respect to :math:`x=0` is called :math:`\alpha_m`. Similarly, for the scene, it is called :math:`\alpha_s`.
 
 Hough-like Voting Scheme
 ------------------------
 
-After both transformations the difference of the point pair features
-remain to be :math:`\alpha=\alpha_m-\alpha_s`. This component carries
-the cue about the object pose. A Hough-like voting scheme is followed
-over the local model coordinate vector and :math:`\alpha`, which
-eventually recovers the object pose.
+As shown in the outline, PPF (point pair features) are extracted from the model, quantized, stored in the hashtable and indexed, during the training stage. During the runtime however, the similar operation is perfomed on the input scene with the exception that this time a similarity lookup over the hashtable is performed, instead of an insertion. This lookup also allows us to compute a transformation to the ground plane for the scene pairs. After this point, computing the rotational component of the pose reduces to computation of the difference :math:`\alpha=\alpha_m-\alpha_s`. This component carries
+the cue about the object pose. A Hough-like voting scheme is performed over the local model coordinate vector and :math:`\alpha`. The highest poses achieved for every scene point lets us recover the object pose.
+
+Source Code for PPF Matching
+----------------------------
+
+.. code-block:: cpp
+
+	// pc is the loaded point cloud of the model
+	// (Nx6) and pcTest is a loaded point cloud of 
+	// the scene (Mx6)
+	ppf_match_3d::PPF3DDetector detector(0.03, 0.05);
+	detector.trainModel(pc);
+	vector < Pose3D* > results;
+	detector.match(pcTest, results, 1.0/10.0, 0.05);
+	cout << "Poses: " << endl;
+	// print the poses
+	for (size_t i=0; i<results.size(); i++)
+	{
+	    Pose3D* pose = results[i];
+	    cout << "Pose Result " << i << endl;
+	    pose->printPose();
+	}
 
 Pose Registration via ICP
 =========================
@@ -142,11 +145,11 @@ However, due to the multiple matching points, erroneous hypothesis, pose
 averaging and etc. such pose is very open to noise and many times is far
 from being perfect. Although the visual results obtained in that stage
 are pleasing, the quantitative evaluation shows :math:`~10` degrees
-variation, which is an acceptable threshold. Many times, the requirement
+variation (error), which is an acceptable level of matching. Many times, the requirement
 might be set well beyond this margin and it is desired to refine the
 computed pose.
 
-Furthermore, in typical RGBD scenes, the depth maps can capture only
+Furthermore, in typical RGBD scenes and point clouds, 3D structure can capture only
 less than half of the model due to the visibility in the scene.
 Therefore, a robust pose refinement algorithm, which can register
 occluded and partially visible shapes quickly and correctly is not an
@@ -190,7 +193,7 @@ of nearest neighbors, to increase the speed. However this is not an
 optimality guarantee and many times causes wrong points to be matched.
 Luckily the assignments are corrected over iterations.
 
-To overcome some of the limitations, Picky ICP and BC-ICP (ICP using
+To overcome some of the limitations, Picky ICP [pickyicp] and BC-ICP (ICP using
 bi-unique correspondences) are two well-known methods. Picky ICP first
 finds the correspondences in the old-fashioned way and then among the
 resulting corresponding pairs, if more than one scene point :math:`p_i`
@@ -228,9 +231,8 @@ in the previous stage.
 Error Metric
 ------------
 
-As described in , a linearization of point to plane error metric is
-used. This both speeds up the registration process and improves
-convergence.
+As described in , a linearization of point to plane as in |kokkimlow| error metric is
+used. This both speeds up the registration process and improves convergence.
 
 Minimization
 ------------
@@ -238,16 +240,16 @@ Minimization
 Even though many non-linear optimizers (such as Levenberg Mardquardt)
 are proposed, due to the linearization in the previous step, pose
 estimation reduces to solving a linear system of equations. This is what
-I do exactly.
+I do exactly using cv::solve with DECOMP_SVD option.
 
 ICP Algorithm
 -------------
 
-Having described the steps above, here I summarize the layout of the icp
+Having described the steps above, here I summarize the layout of the ICP
 algorithm.
 
 Efficient ICP Through Point Cloud Pyramids
-------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 While the up-to-now-proposed variants deal well with some outliers and
 bad initializations, they require significant number of iterations. Yet,
@@ -264,7 +266,8 @@ the previously estimated pose is used as an initial pose and refined
 with the ICP.
 
 Visual Results
---------------
+^^^^^^^^^^^^^^
+
 
 Results on Synthetic Data
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -274,8 +277,57 @@ partially observed and subject to random uniform noise. More over the
 initial pose set out to be
 :math:`[\theta_x, \theta_y, \theta_z, t_x, t_y, t_z]=[]`
 
+Source Code for Pose Refinement Using ICP
+-----------------------------------------
+
+.. code-block:: cpp
+
+	ICP icp(200, 0.001f, 2.5f, 8);
+	// Using the previously declared pc and pcTest
+	// This will perform registration for every pose
+	// contained in results
+	icp.registerModelToScene(pc, pcTest, results);
+	
+	// results now contain the refined poses
+
 Results
 =======
 
-This section is dedicated to the results of point-pair-feature matching
-and a following ICP refinement.
+This section is dedicated to the results of surface matching (point-pair-feature matching
+and a following ICP refinement):
+
+.. image:: resource/gsoc_forg_matches.jpg
+	:scale: 65 %
+	:align: center
+	:alt: Several matches of a single frog model using ppf + icp
+
+Matches of different models for Mian dataset is presented below:
+
+.. image:: resource/snapshot27.jpg
+   :scale: 50 %
+   :align: center
+   :alt: Matches of different models for Mian dataset
+
+You might checkout the video on `youTube here <http://www.youtube.com/watch?v=uFnqLFznuZU>`_.
+
+.. raw:: html
+
+	<div align="center">
+	<iframe width="775" height="436" src="http://www.youtube.com/embed/uFnqLFznuZU?list=UUMSqZYDAmbiaAhyvLPJGhsg" frameborder="0" allowfullscreen></iframe>
+	</div>
+
+
+A Complete Sample
+=================
+.. literalinclude:: code/ppf_load_match.cpp
+   :language: cpp
+   :linenos:
+   :tab-width: 4
+
+References
+==========
+
+.. [drost2010] B. Drost, S. Ilic 3D Object Detection and Localization Using Multimodal Point Pair Features Second Joint 3DIM/3DPVT Conference: 3D Imaging, Modeling, Processing, Visualization & Transmission (3DIMPVT), Zurich, Switzerland, October 2012
+
+.. [pickyicp] Zinsser, Timo and Schmidt, Jochen and Niemann, Heinrich A refined ICP algorithm for robust 3-D correspondence estimation Image Processing, 2003. ICIP 2003. Proceedings. 2003 International Conference on Image Processing, IEEE.
+
