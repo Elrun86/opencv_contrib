@@ -1,22 +1,51 @@
-// Note for OpenCV:
-// Taken from http://code.google.com/p/smhasher/
-// License: MIT
+//
+//  IMPORTANT: READ BEFORE DOWNLOADING, COPYING, INSTALLING OR USING.
+//
+//  By downloading, copying, installing or using the software you agree to this license.
+//  If you do not agree to this license, do not download, install,
+//  copy or use the software.
+//
+//
+//                          License Agreement
+//                For Open Source Computer Vision Library
+//
+// Copyright (C) 2014, OpenCV Foundation, all rights reserved.
+// Third party copyrights are property of their respective owners.
+//
+// Redistribution and use in source and binary forms, with or without modification,
+// are permitted provided that the following conditions are met:
+//
+//   * Redistribution's of source code must retain the above copyright notice,
+//     this list of conditions and the following disclaimer.
+//
+//   * Redistribution's in binary form must reproduce the above copyright notice,
+//     this list of conditions and the following disclaimer in the documentation
+//     and/or other materials provided with the distribution.
+//
+//   * The name of the copyright holders may not be used to endorse or promote products
+//     derived from this software without specific prior written permission.
+//
+// This software is provided by the copyright holders and contributors "as is" and
+// any express or implied warranties, including, but not limited to, the implied
+// warranties of merchantability and fitness for a particular purpose are disclaimed.
+// In no event shall the Intel Corporation or contributors be liable for any direct,
+// indirect, incidental, special, exemplary, or consequential damages
+// (including, but not limited to, procurement of substitute goods or services;
+// loss of use, data, or profits; or business interruption) however caused
+// and on any theory of liability, whether in contract, strict liability,
+// or tort (including negligence or otherwise) arising in any way out of
+// the use of this software, even if advised of the possibility of such damage.
+//
+// Author: Tolga Birdal
 
-//-----------------------------------------------------------------------------
-// MurmurHash3 was written by Austin Appleby, and is placed in the public
-// domain. The author hereby disclaims copyright to this source code.
+#ifndef __OPENCV_HASH_MURMUR_HPP_
+#define __OPENCV_HASH_MURMUR_HPP_
 
-// Note - The x86 and x64 versions do _not_ produce the same results, as the
-// algorithms are optimized for their respective platforms. You can still
-// compile and run any of them on any platform, but your performance with the
-// non-native version will be less than optimal.
+namespace cv
+{
+	namespace ppf_match_3d
+	{
 
-//-----------------------------------------------------------------------------
-// Platform-specific functions and macros
-
-
-#ifndef __HASH_MURMUR_H_
-#define __HASH_MURMUR_H_
 
 #if defined(_MSC_VER)
 
@@ -29,121 +58,32 @@
 
 #define BIG_CONSTANT(x) (x)
 
-// Other compilers
-
-#else   // defined(_MSC_VER)
-
-//#define FORCE_INLINE __attribute__((always_inline))
+#else
+		//#define FORCE_INLINE __attribute__((always_inline))
 #define FORCE_INLINE inline static
 
-inline static int ROTL32 ( int x, int8_t r )
-{
-    return (x << r) | (x >> (32 - r));
-}
+		inline static int ROTL32 ( int x, int8_t r )
+		{
+			return (x << r) | (x >> (32 - r));
+		}
 
-inline static long long ROTL64 ( long long x, int8_t r )
-{
-    return (x << r) | (x >> (64 - r));
-}
-
-//#define ROTL32(x,y)     rotl32(x,y)
-//#define ROTL64(x,y)     rotl64(x,y)
+		inline static long long ROTL64 ( long long x, int8_t r )
+		{
+			return (x << r) | (x >> (64 - r));
+		}
 
 #define BIG_CONSTANT(x) (x##LLU)
 
 #endif // !defined(_MSC_VER)
 
-
-namespace cv
-{
-namespace ppf_match_3d
-{
-//-----------------------------------------------------------------------------
-// Block read - if your platform needs to do endian-swapping or can only
-// handle aligned reads, do the conversion here
-
-FORCE_INLINE int getblock ( const int * p, int i )
-{
-    return p[i];
+#if (defined __x86_64__ || defined _M_X64)
+#include "hash_murmur64.hpp"
+#define murmurHash hashMurmurx64
+#else
+#include "hash_murmur86.hpp"
+#define murmurHash hashMurmurx86
+#endif
+	}
 }
-
-FORCE_INLINE long long getblock64 ( const long long * p, int i )
-{
-    return p[i];
-}
-
-//-----------------------------------------------------------------------------
-// Finalization mix - force all bits of a hash block to avalanche
-
-FORCE_INLINE int fmix ( int h )
-{
-    h ^= h >> 16;
-    h *= 0x85ebca6b;
-    h ^= h >> 13;
-    h *= 0xc2b2ae35;
-    h ^= h >> 16;
-    
-    return h;
-}
-
-//----------
-
-
-//-----------------------------------------------------------------------------
-
-FORCE_INLINE void hashMurmurx86 ( const void * key, int len, int seed, void * out )
-{
-    const unsigned char * data = (const unsigned char*)key;
-    const int nblocks = len / 4;
-    
-    int h1 = seed;
-    
-    int c1 = 0xcc9e2d51;
-    int c2 = 0x1b873593;
-    int i;
-    
-    const int * blocks = (const int *)(data + nblocks*4);
-    unsigned char * tail;
-    int k1g = 0;
-    
-    for (i = -nblocks; i; i++)
-    {
-        //int k1 = getblock(blocks,i);
-        int k1 = blocks[i];
-        
-        k1 *= c1;
-        k1 = ROTL32(k1,15);
-        k1 *= c2;
-        
-        h1 ^= k1;
-        h1 = ROTL32(h1,13);
-        h1 = h1*5+0xe6546b64;
-    }
-    
-    tail = (unsigned char*)(data + nblocks*4);
-    
-    switch (len & 3)
-    {
-        case 3:
-            k1g ^= tail[2] << 16;
-        case 2:
-            k1g ^= tail[1] << 8;
-        case 1:
-            k1g ^= tail[0];
-            k1g *= c1;
-            k1g = ROTL32(k1g,15);
-            k1g *= c2;
-            h1 ^= k1g;
-    };
-    
-    h1 ^= len;
-    
-    h1 = fmix(h1);
-    
-    *(int*)out = h1;
-}
-
-} // namespace ppf_match_3d
-} // namespace cv
 
 #endif
