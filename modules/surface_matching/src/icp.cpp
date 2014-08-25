@@ -198,7 +198,7 @@ static void minimizePointToPlaneMetric(Mat Src, Mat Dst, Mat& X)
     Mat A=Mat(Src.rows, 6, CV_64F);
     Mat b=Mat(Src.rows, 1, CV_64F);
     
-#if defined T_OPENMP
+#if defined _OPENMP
 #pragma omp parallel for
 #endif
     for (int i=0; i<Src.rows; i++)

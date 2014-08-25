@@ -476,7 +476,7 @@ Mat transformPCPose(Mat pc, double Pose[16])
     double R[9], t[3];
     poseToRT(Pose, R, t);
     
-#if defined T_OPENMP
+#if defined _OPENMP
 #pragma omp parallel for
 #endif
     for (int i=0; i<pc.rows; i++)

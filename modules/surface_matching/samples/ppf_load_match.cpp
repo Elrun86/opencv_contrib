@@ -71,6 +71,12 @@ int main(int argc, char** argv)
         exit(1);
     }
 
+    #ifdef _OPENMP
+      std::cout << "Running with OpenMP" << std::endl;
+    #else 
+      std::cout << "Running without OpenMP and without TBB" << std::endl;
+    #endif
+
     string modelFileName = (string)argv[1];
     string sceneFileName = (string)argv[2];
 

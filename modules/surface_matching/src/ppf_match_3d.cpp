@@ -379,7 +379,7 @@ int PPF3DDetector::clusterPoses(Pose3D** poseList, int numPoses, std::vector<Pos
     
     if (UseWeightedAvg)
     {
-#if defined T_OPENMP
+#if defined _OPENMP
 #pragma omp parallel for
 #endif
         // uses weighting by the number of votes
@@ -433,7 +433,7 @@ int PPF3DDetector::clusterPoses(Pose3D** poseList, int numPoses, std::vector<Pos
     }
     else
     {
-#if defined T_OPENMP
+#if defined _OPENMP
 #pragma omp parallel for
 #endif
         for (size_t i=0; i<poseClusters.size(); i++)
@@ -514,13 +514,13 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
     Mat sampled = samplePCByQuantization(pc, xRange, yRange, zRange, (float)RelativeSceneDistance,1);
     
     // allocate the accumulator : Moved this to the inside of the loop
-    /*#if !defined (T_OPENMP)
+    /*#if !defined (_OPENMP)
        unsigned int* accumulator = (unsigned int*)calloc(numAngles*n, sizeof(unsigned int));
     #endif*/
     
     poseList = (Pose3D**)calloc((sampled.rows/sceneSamplingStep)+4, sizeof(Pose3D*));
     
-#if defined T_OPENMP
+#if defined _OPENMP
 #pragma omp parallel for
 #endif
     for (int i = 0; i < sampled.rows; i += sceneSamplingStep)
@@ -616,7 +616,7 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
                     alphaIndMax = j;
                 }
                 
-#if !defined (T_OPENMP)
+#if !defined (_OPENMP)
                 accumulator[accInd ] = 0;
 #endif
             }
@@ -668,7 +668,7 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
         
         poseList[i/sceneSamplingStep] = ppf;
         
-#if defined (T_OPENMP)
+#if defined (_OPENMP)
         free(accumulator);
 #endif
     }
@@ -691,7 +691,7 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
     }
     
     free(poseList);
-    /*#if !defined (T_OPENMP)
+    /*#if !defined (_OPENMP)
        free(accumulator);
     #endif*/
 }
