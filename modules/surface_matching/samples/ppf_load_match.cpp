@@ -84,7 +84,7 @@ int main(int argc, char** argv)
     int64 tick2 = cv::getTickCount();
     cout << endl << "Training complete in "
          << (double)(tick2-tick1)/ cv::getTickFrequency()
-         << " ms" << endl << "Loading model..." << endl;
+         << " sec" << endl << "Loading model..." << endl;
 
     // Read the scene
     Mat pcTest = loadPLYSimple(sceneFileName.c_str(), 1);
@@ -96,7 +96,7 @@ int main(int argc, char** argv)
     detector.match(pcTest, results, 1.0/10.0, 0.05);
     tick2 = cv::getTickCount();
     cout << endl << "PPF Elapsed Time " <<
-            (tick2-tick1)/cv::getTickFrequency() << " ms" << endl;
+            (tick2-tick1)/cv::getTickFrequency() << " sec" << endl;
 
     // Get only first N results
     int N = 2;
