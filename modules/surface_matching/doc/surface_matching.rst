@@ -17,7 +17,7 @@ The state of the algorithms in order to achieve the task 3D matching heavily bas
 
 While being fully aware that utilization of the nice CAD model structure in order to achieve a smart point sampling, I will be leaving that aside now in order to respect the generalizability of the methods (Typically for such algorithms training on a CAD model is not needed, and a point cloud would be sufficient). Below is the outline of the entire algorithm:
 
-.. image:: resource/outline.jpg
+.. image:: surface_matching/pics/outline.jpg
 	:scale: 75 %
 	:align: center
 	:alt: Outline of the Algorithm
@@ -290,14 +290,14 @@ Results
 This section is dedicated to the results of surface matching (point-pair-feature matching
 and a following ICP refinement):
 
-.. image:: resource/gsoc_forg_matches.jpg
+.. image:: surface_matching/pics/gsoc_forg_matches.jpg
 	:scale: 65 %
 	:align: center
 	:alt: Several matches of a single frog model using ppf + icp
 
 Matches of different models for Mian dataset is presented below:
 
-.. image:: resource/snapshot27.jpg
+.. image:: surface_matching/pics/snapshot27.jpg
    :scale: 50 %
    :align: center
    :alt: Matches of different models for Mian dataset
@@ -313,7 +313,7 @@ You might checkout the video on `youTube here <http://www.youtube.com/watch?v=uF
 
 A Complete Sample
 =================
-.. literalinclude:: ../samples/ppf_load_match.cpp
+.. literalinclude:: surface_matching/src/ppf_load_match.cpp
    :language: cpp
    :linenos:
    :tab-width: 4
