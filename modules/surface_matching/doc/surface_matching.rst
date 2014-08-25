@@ -1,5 +1,3 @@
-.. include:: math.rst
-
 .. _surfacematching:
 
 Introduction to Surface Matching
@@ -179,8 +177,6 @@ points which affect both translation and rotation are used. This is a
 clever way of subsampling, which I will optionally be using in the
 implementation.
 
-A result of the smart covariance based sampling is shown in Figure
-[samplecov].
 
 Correspondence Search
 ---------------------
@@ -231,7 +227,7 @@ in the previous stage.
 Error Metric
 ------------
 
-As described in , a linearization of point to plane as in |kokkimlow| error metric is
+As described in , a linearization of point to plane as in [kokkimlow] error metric is
 used. This both speeds up the registration process and improves convergence.
 
 Minimization
@@ -272,10 +268,8 @@ Visual Results
 Results on Synthetic Data
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Figure [icpsynth] shows the result of the registration when the scene is
-partially observed and subject to random uniform noise. More over the
-initial pose set out to be
-:math:`[\theta_x, \theta_y, \theta_z, t_x, t_y, t_z]=[]`
+In all of the results, the pose is initiated by PPF and the rest is left as:
+:math:`[\theta_x, \theta_y, \theta_z, t_x, t_y, t_z]=[0]`
 
 Source Code for Pose Refinement Using ICP
 -----------------------------------------
@@ -330,4 +324,6 @@ References
 .. [drost2010] B. Drost, S. Ilic 3D Object Detection and Localization Using Multimodal Point Pair Features Second Joint 3DIM/3DPVT Conference: 3D Imaging, Modeling, Processing, Visualization & Transmission (3DIMPVT), Zurich, Switzerland, October 2012
 
 .. [pickyicp] Zinsser, Timo and Schmidt, Jochen and Niemann, Heinrich A refined ICP algorithm for robust 3-D correspondence estimation Image Processing, 2003. ICIP 2003. Proceedings. 2003 International Conference on Image Processing, IEEE.
+
+.. [kokkimlow] Zinsser, Timo and Schmidt, Jochen and Niemann, Heinrich A refined ICP algorithm for robust 3-D correspondence estimation Image Processing, 2003. ICIP 2003. Proceedings. 2003 International Conference on Image Processing, IEEE.
 
