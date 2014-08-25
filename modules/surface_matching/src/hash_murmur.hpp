@@ -56,8 +56,6 @@ namespace cv
 #define ROTL32(x,y)     _rotl(x,y)
 #define ROTL64(x,y)     _rotl64(x,y)
 
-#define BIG_CONSTANT(x) (x)
-
 #else
 		//#define FORCE_INLINE __attribute__((always_inline))
 #define FORCE_INLINE inline static
@@ -71,8 +69,6 @@ namespace cv
 		{
 			return (x << r) | (x >> (64 - r));
 		}
-
-#define BIG_CONSTANT(x) (x##LLU)
 
 #endif // !defined(_MSC_VER)
 
