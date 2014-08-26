@@ -80,7 +80,7 @@ static int hashPPF(const double f[4], const double AngleStep, const double Dista
     int key[4]={d1,d2,d3,d4};
     int hashKey=0;
     
-    hashMurmurx86(key, 4*sizeof(int), 42, &hashKey);
+    hashMurmur(key, 4*sizeof(int), 42, &hashKey);
     
     return hashKey;
 }

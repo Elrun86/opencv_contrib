@@ -69,7 +69,8 @@ FORCE_INLINE void bmix32 ( unsigned int & h1, unsigned int & h2, unsigned int & 
 
 //----------
 
-FORCE_INLINE void hashMurmurx64 ( const void * key, const int len, const unsigned int seed, void * out )
+//FORCE_INLINE void hashMurmurx64 ( const void * key, const int len, const unsigned int seed, void * out )
+FORCE_INLINE void hashMurmur ( const void * key, const int len, const unsigned int seed, void * out )
 {
 	const unsigned char * data = (const unsigned char*)key;
 	const int nblocks = len / 8;

@@ -74,10 +74,8 @@ namespace cv
 
 #if (defined __x86_64__ || defined _M_X64)
 #include "hash_murmur64.hpp"
-#define murmurHash hashMurmurx64
 #else
 #include "hash_murmur86.hpp"
-#define murmurHash hashMurmurx86
 #endif
 	}
 }

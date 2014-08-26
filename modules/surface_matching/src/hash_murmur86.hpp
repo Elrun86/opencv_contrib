@@ -51,7 +51,8 @@ FORCE_INLINE int fmix ( int h )
 
 //-----------------------------------------------------------------------------
 
-FORCE_INLINE void hashMurmurx86 ( const void * key, int len, int seed, void * out )
+//FORCE_INLINE void hashMurmurx86 ( const void * key, int len, int seed, void * out )
+FORCE_INLINE void hashMurmur ( const void * key, int len, int seed, void * out )
 {
     const unsigned char * data = (const unsigned char*)key;
     const int nblocks = len / 4;
