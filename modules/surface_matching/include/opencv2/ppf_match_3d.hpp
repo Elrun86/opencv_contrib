@@ -74,7 +74,7 @@ namespace ppf_match_3d
 */
 typedef struct THash
 {
-    int id;
+    KeyType id;
     int i, ppfInd;
 } THash;
 

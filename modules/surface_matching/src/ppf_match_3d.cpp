@@ -71,14 +71,14 @@ static int sortPoseClusters (const PoseCluster3D* a, const PoseCluster3D* b)
 }*/
 
 // quantize ppf and hash it for proper indexing
-static int hashPPF(const double f[4], const double AngleStep, const double DistanceStep)
+static KeyType hashPPF(const double f[4], const double AngleStep, const double DistanceStep)
 {
     const int d1 = (int) (floor ((double)f[0] / (double)AngleStep));
     const int d2 = (int) (floor ((double)f[1] / (double)AngleStep));
     const int d3 = (int) (floor ((double)f[2] / (double)AngleStep));
     const int d4 = (int) (floor ((double)f[3] / (double)DistanceStep));
     int key[4]={d1,d2,d3,d4};
-    int hashKey=0;
+    KeyType hashKey=0;
     
     hashMurmur(key, 4*sizeof(int), 42, &hashKey);
     
@@ -287,7 +287,7 @@ int PPF3DDetector::trainModel(const Mat &PC)
                 
                 double f[4]={0};
                 computePPFFeatures(p1, n1, p2, n2, f);
-                unsigned int hashValue = hashPPF(f, angleStepRadians, distanceStep);
+                KeyType hashValue = hashPPF(f, angleStepRadians, distanceStep);
                 double alpha = computeAlpha(p1, n1, p2);
                 unsigned int corrInd = i*numRefPoints+j;
                 unsigned int ppfInd = corrInd*ppfStep;
@@ -554,7 +554,7 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
                 
                 double f[4]={0};
                 computePPFFeatures(p1, n1, p2, n2, f);
-                unsigned int hashValue = hashPPF(f, angle_step, distanceStep);
+                KeyType hashValue = hashPPF(f, angle_step, distanceStep);
                 
                 // we don't need to call this here, as we already estimate the tsg from scene reference point
                 // double alpha = computeAlpha(p1, n1, p2);
