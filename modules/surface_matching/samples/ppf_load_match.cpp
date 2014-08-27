@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     // Now train the model
     cout << "Training..." << endl;
     int64 tick1 = cv::getTickCount();
-    ppf_match_3d::PPF3DDetector detector(0.03, 0.05);
+    ppf_match_3d::PPF3DDetector detector(0.03, 0.03);
     detector.trainModel(pc);
     int64 tick2 = cv::getTickCount();
     cout << endl << "Training complete in "
@@ -105,7 +105,7 @@ int main(int argc, char** argv)
     cout << endl << "Starting matching..." << endl;
     vector < Pose3D* > results;
     tick1 = cv::getTickCount();
-    detector.match(pcTest, results, 1.0/10.0, 0.05);
+    detector.match(pcTest, results, 1.0/5.0, 0.03);
     tick2 = cv::getTickCount();
     cout << endl << "PPF Elapsed Time " <<
             (tick2-tick1)/cv::getTickFrequency() << " sec" << endl;
