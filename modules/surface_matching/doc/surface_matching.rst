@@ -13,7 +13,7 @@ From an industrial perspective, enabling robots to automatically locate and pick
 Surface Matching Algorithm Through 3D Features
 ==============================================
 
-The state of the algorithms in order to achieve the task 3D matching heavily based on [drost2010], which is one of the first and main practical methods presented in this area. The approach is composed of extracting 3D feature points randomly from depth images or generic point clouds, indexing them and later in runtime querying them efficiently. Only the 3D structure is considered, and a trivial hash table is used for feature queries.
+The state of the algorithms in order to achieve the task 3D matching heavily based on [drost2010]_, which is one of the first and main practical methods presented in this area. The approach is composed of extracting 3D feature points randomly from depth images or generic point clouds, indexing them and later in runtime querying them efficiently. Only the 3D structure is considered, and a trivial hash table is used for feature queries.
 
 While being fully aware that utilization of the nice CAD model structure in order to achieve a smart point sampling, I will be leaving that aside now in order to respect the generalizability of the methods (Typically for such algorithms training on a CAD model is not needed, and a point cloud would be sufficient). Below is the outline of the entire algorithm:
 
@@ -35,7 +35,21 @@ extracted from the scene and compared to the database. With a few tricks
 like separation of the rotational components, the pose estimation part
 can also be made efficient (check the reference for more details). A
 Hough-like voting and clustering is employed to estimate the object
-pose. This pose is further refined using :math:`ICP` in order to obtain
+pose. To cluster the poses, the raw pose hypotheses are sorted in decreasing order
+of the number of votes. From the highest vote, a
+new cluster is created. If the next pose hypothesis is close to one of
+the existing clusters, the hypothesis is added to the cluster
+and the cluster center is updated as the average of the pose
+hypotheses within the cluster. If the next hypothesis is not
+close to any of the clusters, it creates a new cluster. The
+proximity testing is done with fixed thresholds in translation
+and rotation. Distance computation and averaging for translation are performed in the 3D Euclidean space, while those
+for rotation are performed using quaternion representation.
+After clustering, the clusters are sorted in decreasing order
+of the total number of votes which determines confidence of
+the estimated poses.
+
+This pose is further refined using :math:`ICP` in order to obtain
 the final pose.
 
 PPF presented above depends largely on robust computation of angles
@@ -189,7 +203,7 @@ of nearest neighbors, to increase the speed. However this is not an
 optimality guarantee and many times causes wrong points to be matched.
 Luckily the assignments are corrected over iterations.
 
-To overcome some of the limitations, Picky ICP [pickyicp] and BC-ICP (ICP using
+To overcome some of the limitations, Picky ICP [pickyicp]_ and BC-ICP (ICP using
 bi-unique correspondences) are two well-known methods. Picky ICP first
 finds the correspondences in the old-fashioned way and then among the
 resulting corresponding pairs, if more than one scene point :math:`p_i`
@@ -227,7 +241,7 @@ in the previous stage.
 Error Metric
 ------------
 
-As described in , a linearization of point to plane as in [kokkimlow] error metric is
+As described in , a linearization of point to plane as in [koklimlow]_ error metric is
 used. This both speeds up the registration process and improves convergence.
 
 Minimization
@@ -317,6 +331,18 @@ A Complete Sample
    :language: cpp
    :linenos:
    :tab-width: 4
+   
+   
+Parameter Tuning
+----------------
+
+Surface matching module treats its parameters relative to the model diameter (diameter of the axis parallel bounding box), whenever it can. This makes the parameters independent from the model size. This is why, both model and scene cloud were subsampled such that all points have a minimum distance of :math:`RelativeSamplingStep*DimensionRange`, where :math:`DimensionRange` is the distance along a given dimension. All three dimensions are sampled in similar manner. For example, if :math:`RelativeSamplingStep` is set to 0.05 and the diameter of model is 1m (1000mm), the points sampled from the object's surface will be approximately 50 mm apart. From another point of view, if the sampling RelativeSamplingStep is set to 0.05, at most :math:`20x20x20 = 8000` model points are generated (depending on how the model fills in the volume). Consequently this results in at most 8000x8000 pairs. In practice, because the models are not uniformly distributed over a rectangular prism, much less points are to be expected. Decreasing this value, results in more model points and thus a more accurate representation. However, note that number of point pair features to be computed is now quadratically increased as the complexity is O(N^2). This is especially a concern for 32 bit systems, where large models can easily overshoot the available memory. Typically, values in the range of 0.025 - 0.05 seem adequate for most of the applications, where the default value is 0.03. (Note that there is a difference in this paremeter with the one presented in [drost2010]_. In [drost2010]_ a uniform cuboid is used for quantization and model diameter is used for reference of sampling. In my implementation, the cuboid is a rectangular prism, and each dimension is quantized independently. I do not take reference from the diameter but along the individual dimensions.
+
+It would very wise to remove the outliers from the model and prepare an ideal model initially. This is because, the outliers directly affect the relative computations and degrade the matching accuracy. 
+
+During runtime stage, the scene is again sampled by :math:`RelativeSamplingStep`, as described above. However this time, only a portion of the scene points are used as reference. This portion is controlled by the parameter :math:`RelativeSceneSampleStep`, where :math:`SceneSampleStep = (int)(1.0/RelativeSceneSampleStep)`. In other words, if the :math:`RelativeSceneSampleStep = 1.0/5.0`, the subsampled scene will once again be uniformly sampled to 1/5 of the number of points. Maximum value of this parameter is 1 and increasing this parameter also increases the stability, but decreases the speed. Again, because of the initial scene-independent relative sampling, fine tuning this parameter is not a big concern. This would only be an issue when the model shape occupies a volume uniformly, or when the model shape is condensed in a tiny place within the quantization volume (e.g. The octree representation would have too much empty cells). 
+
+:math:`RelativeDistanceStep` acts as a step of discretization over the hash table. The point pair features are quantized to be mapped to the buckets of the hashtable. This discretization involves a multiplication and a casting to the integer. Adjusting RelativeDistanceStep in theory controls the collision rate. Note that, more collisions on the hashtable results in less accurate estimations. Reducing this parameter increases the affect of quantization but starts to assign non-similar point pairs to the same bins. Increasing it however, wanes the ability to group the similar pairs. Generally, because during the sampling stage, the training model points are selected uniformly with a distance controlled by RelativeSamplingStep, RelativeDistanceStep is expected to equate to this value. Yet again, values in the range of 0.025-0.05 are sensible. This time however, when the model is dense, it is not advised to decrease this value. For noisy scenes, the value can be increased to improve the robustness of the matching against noisy points. 
 
 References
 ==========
@@ -325,5 +351,5 @@ References
 
 .. [pickyicp] Zinsser, Timo and Schmidt, Jochen and Niemann, Heinrich A refined ICP algorithm for robust 3-D correspondence estimation Image Processing, 2003. ICIP 2003. Proceedings. 2003 International Conference on Image Processing, IEEE.
 
-.. [kokkimlow] Zinsser, Timo and Schmidt, Jochen and Niemann, Heinrich A refined ICP algorithm for robust 3-D correspondence estimation Image Processing, 2003. ICIP 2003. Proceedings. 2003 International Conference on Image Processing, IEEE.
+.. [koklimlow] Kok Lim Low, Linear Least-Squares Optimization for Point-to-Plane ICP Surface Registration Technical Report TR04-004, Department of Computer Science, University of North Carolina at Chapel Hill, February 2004
 
