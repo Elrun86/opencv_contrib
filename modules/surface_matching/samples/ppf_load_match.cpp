@@ -73,6 +73,18 @@ int main(int argc, char** argv)
         exit(1);
     }
 
+#if (defined __x86_64__ || defined _M_X64)
+    std::cout << "Running on 64 bits" << std::endl;
+#else
+    std::cout << "Running on 32 bits" << std::endl;
+#endif
+
+#ifdef _OPENMP
+    std::cout << "Running with OpenMP" << std::endl;
+#else 
+    std::cout << "Running without OpenMP and without TBB" << std::endl;
+#endif
+	
     string modelFileName = (string)argv[1];
     string sceneFileName = (string)argv[2];
 
