@@ -36,7 +36,7 @@
 // or tort (including negligence or otherwise) arising in any way out of
 // the use of this software, even if advised of the possibility of such damage.
 //
-// Author: Tolga Birdal
+// Author: Tolga Birdal <tbirdal AT gmail.com>
 
 #include "opencv2/ppf_match_3d.hpp"
 #include <iostream>
@@ -62,47 +62,47 @@ int main(int argc, char** argv)
     std::cout<< "* Surface Matching demonstration : demonstrates the use of surface matching"
              " using point pair features."<<std::endl;
     std::cout<< "* The sample loads a model and a scene, where the model lies in a different"
-             " pose than the training. It then trains the model and searches for it in the "
-			 " input scene. The detected poses are further refined by ICP and printed to the"
-			 " standard output."<<std::endl;
+             " pose than the training.\n* It then trains the model and searches for it in the"
+             " input scene. The detected poses are further refined by ICP\n* and printed to the "
+             " standard output."<<std::endl;
     std::cout<< "****************************************************"<<std::endl;
-
+    
     if (argc < 3)
     {
         help("Not enough input arguments");
         exit(1);
     }
-
+    
 #if (defined __x86_64__ || defined _M_X64)
     std::cout << "Running on 64 bits" << std::endl;
 #else
     std::cout << "Running on 32 bits" << std::endl;
 #endif
-
+    
 #ifdef _OPENMP
     std::cout << "Running with OpenMP" << std::endl;
-#else 
+#else
     std::cout << "Running without OpenMP and without TBB" << std::endl;
 #endif
-	
+    
     string modelFileName = (string)argv[1];
     string sceneFileName = (string)argv[2];
-
+    
     Mat pc = loadPLYSimple(modelFileName.c_str(), 1);
-
+    
     // Now train the model
     cout << "Training..." << endl;
     int64 tick1 = cv::getTickCount();
-	ppf_match_3d::PPF3DDetector detector(0.025, 0.05);
+    ppf_match_3d::PPF3DDetector detector(0.025, 0.05);
     detector.trainModel(pc);
     int64 tick2 = cv::getTickCount();
     cout << endl << "Training complete in "
          << (double)(tick2-tick1)/ cv::getTickFrequency()
          << " ms" << endl << "Loading model..." << endl;
-
+         
     // Read the scene
     Mat pcTest = loadPLYSimple(sceneFileName.c_str(), 1);
-
+    
     // Match the model to the scene and get the pose
     cout << endl << "Starting matching..." << endl;
     vector < Pose3D* > results;
@@ -110,26 +110,26 @@ int main(int argc, char** argv)
     detector.match(pcTest, results, 1.0/40.0, 0.05);
     tick2 = cv::getTickCount();
     cout << endl << "PPF Elapsed Time " <<
-            (tick2-tick1)/cv::getTickFrequency() << " ms" << endl;
-
+         (tick2-tick1)/cv::getTickFrequency() << " ms" << endl;
+         
     // Get only first N results
     int N = 2;
     vector<Pose3D*>::const_iterator first = results.begin();
     vector<Pose3D*>::const_iterator last = results.begin() + N;
     vector<Pose3D*> resultsSub(first, last);
-
+    
     // Create an instance of ICP
-    ICP icp(150, 0.005f, 2.5f, 8);
+    ICP icp(100, 0.005f, 2.5f, 8);
     int64 t1 = cv::getTickCount();
-
+    
     // Register for all selected poses
     cout << endl << "Performing ICP on " << N << " poses..." << endl;
     icp.registerModelToScene(pc, pcTest, resultsSub);
     int64 t2 = cv::getTickCount();
-
+    
     cout << endl << "ICP Elapsed Time " <<
-            (t2-t1)/cv::getTickFrequency() << " sec" << endl;
-
+         (t2-t1)/cv::getTickFrequency() << " sec" << endl;
+         
     cout << "Poses: " << endl;
     // debug first five poses
     for (size_t i=0; i<resultsSub.size(); i++)
@@ -137,17 +137,13 @@ int main(int argc, char** argv)
         Pose3D* pose = resultsSub[i];
         cout << "Pose Result " << i << endl;
         pose->printPose();
-		if (i==0)
-		{
-		/*	double Pose[16] = {	0.963949, -0.179312, -0.196596, -228.979635,
-								-0.088843, 0.479551, -0.873005, -599.816336,
-								0.250818, 0.858999, 0.446331, -399.746239,
-								0,0,0,1};*/
-			Mat pct = transformPCPose(pc, pose->Pose);
-			writePLY(pct, "C:/Data/para6700PCTrans.ply");
-		}
+        if (i==0)
+        {
+            Mat pct = transformPCPose(pc, pose->Pose);
+            writePLY(pct, "C:/Data/para6700PCTrans.ply");
+        }
     }
-
+    
     return 0;
+    
 }
-
