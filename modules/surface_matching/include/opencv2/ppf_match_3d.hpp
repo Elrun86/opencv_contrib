@@ -118,17 +118,16 @@ class CV_EXPORTS PPF3DDetector
         *  @param [in] minMatchScore Not used at the moment
         *  @param [in] useWeightedClustering The algorithm by default clusters the poses without weighting. A non-zero value would indicate that the pose clustering should take into account the number of votes as the weights and perform a weighted averaging instead of a simple one.
         */
-        void SetSearchParams(const int numPoses=5, const double positionThreshold=-1, const double rotationThreshold=-1, const double minMatchScore=0.5, const bool useWeightedClustering=false);
+        void setSearchParams(const int numPoses=5, const double positionThreshold=-1, const double rotationThreshold=-1, const double minMatchScore=0.5, const bool useWeightedClustering=false);
         
         /**
         *  \brief Trains a new model. 
         *
         *  @param [in] Model The input point cloud with normals (Nx6)
-        *  \return Returns 0 on success.
         *
         *  \details Uses the parameters set in the constructor to downsample and learn a new model. When the model is learnt, the instance gets ready for calling "match".
         */
-        int trainModel(const Mat& Model);
+        void trainModel(const Mat& Model);
         
         /**
         *  \brief Matches a trained model across a provided scene.
@@ -145,7 +144,6 @@ class CV_EXPORTS PPF3DDetector
         
     protected:
     
-        int magic;
         double maxDist, angle_step, angleStepRadians, distance_step;
         double samplingStepRelative, angleStepRelative, distanceStepRelative;
         Mat inputPC, sampledPC, PPF;
