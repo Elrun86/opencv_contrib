@@ -229,7 +229,7 @@ PPF3DDetector::~PPF3DDetector()
 }
 
 // TODO: Check all step sizes to be positive
-int PPF3DDetector::trainModel(const Mat &PC)
+void PPF3DDetector::trainModel(const Mat &PC)
 {
     CV_Assert(PC.type() == CV_32F || PC.type() == CV_32FC1);
     
@@ -316,8 +316,6 @@ int PPF3DDetector::trainModel(const Mat &PC)
     //samplingStepRelative = sampling_step_relative;
     sampledPC = sampled;
     trained = true;
-    
-    return 0;
 }
 
 
