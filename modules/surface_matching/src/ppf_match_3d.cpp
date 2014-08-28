@@ -36,7 +36,7 @@
 // or tort (including negligence or otherwise) arising in any way out of
 // the use of this software, even if advised of the possibility of such damage.
 //
-// Author: Tolga Birdal <tbirdal AT gmail.com>
+// Author: Tolga Birdal
 
 #include "precomp.hpp"
 #include "hash_murmur.hpp"
@@ -71,16 +71,17 @@ static int sortPoseClusters (const PoseCluster3D* a, const PoseCluster3D* b)
 }*/
 
 // quantize ppf and hash it for proper indexing
-static int hashPPF(const double f[4], const double AngleStep, const double DistanceStep)
+static KeyType hashPPF(const double f[4], const double AngleStep, const double DistanceStep)
 {
     const int d1 = (int) (floor ((double)f[0] / (double)AngleStep));
     const int d2 = (int) (floor ((double)f[1] / (double)AngleStep));
     const int d3 = (int) (floor ((double)f[2] / (double)AngleStep));
     const int d4 = (int) (floor ((double)f[3] / (double)DistanceStep));
     int key[4]={d1,d2,d3,d4};
-    int hashKey=0;
+    KeyType hashKey=0;
     
-    hashMurmurx86(key, 4*sizeof(int), 42, &hashKey);
+    //hashMurmurx86(key, 4*sizeof(int), 42, &hashKey);
+	murmurHash(key, 4*sizeof(int), 42, &hashKey);
     
     return hashKey;
 }
@@ -92,8 +93,6 @@ static int hashPPF(const double f[4], const double AngleStep, const double Dista
     return hashKey;
 }*/
 
-// computes the alpha as in Drost 2010 paper: The transformation to the ground plane with
-// a rotation around x
 static double computeAlpha(const double p1[4], const double n1[4], const double p2[4])
 {
     double Tmg[3], mpt[3], row2[3], row3[3], alpha;
@@ -234,7 +233,7 @@ int PPF3DDetector::trainModel(const Mat &PC)
 {
     CV_Assert(PC.type() == CV_32F || PC.type() == CV_32FC1);
     
-    // compute the bounding box
+    // compute bbox
     float xRange[2], yRange[2], zRange[2];
     computeBboxStd(PC, xRange, yRange, zRange);
     
@@ -244,7 +243,6 @@ int PPF3DDetector::trainModel(const Mat &PC)
     float dz = zRange[1] - zRange[0];
     float diameter = sqrt ( dx * dx + dy * dy + dz * dz );
     
-	// the sampling distance is based relatively on the diameter
     float distanceStep = (float)(diameter * samplingStepRelative);
     
     Mat sampled = samplePCByQuantization(PC, xRange, yRange, zRange, (float)samplingStepRelative,0);
@@ -278,7 +276,7 @@ int PPF3DDetector::trainModel(const Mat &PC)
         //printf("///////////////////// NEW REFERENCE ////////////////////////\n");
         for (int j=0; j<numRefPoints; j++)
         {
-            // should not compute the ppf with myself
+            // cannnot compute the ppf with myself
             if (i!=j)
             {
                 float* f2 = (float*)(&sampled.data[j * sampledStep]);
@@ -287,7 +285,7 @@ int PPF3DDetector::trainModel(const Mat &PC)
                 
                 double f[4]={0};
                 computePPFFeatures(p1, n1, p2, n2, f);
-                unsigned int hashValue = hashPPF(f, angleStepRadians, distanceStep);
+                KeyType hashValue = hashPPF(f, angleStepRadians, distanceStep);
                 double alpha = computeAlpha(p1, n1, p2);
                 unsigned int corrInd = i*numRefPoints+j;
                 unsigned int ppfInd = corrInd*ppfStep;
@@ -345,7 +343,7 @@ int PPF3DDetector::clusterPoses(Pose3D** poseList, int numPoses, std::vector<Pos
     
     finalPoses.clear();
     
-    // sort the poses for stability: Best pose becomes the origin of cluster
+    // sort the poses for stability
     qsort(poseList, numPoses, sizeof(Pose3D*), qsortPoseCmp);
     
     for (int i=0; i<numPoses; i++)
@@ -383,7 +381,7 @@ int PPF3DDetector::clusterPoses(Pose3D** poseList, int numPoses, std::vector<Pos
 #pragma omp parallel for
 #endif
         // uses weighting by the number of votes
-        for (size_t i=0; i<poseClusters.size(); i++)
+        for (int i=0; i<(int)poseClusters.size(); i++)
         {
             // We could only average the quaternions. So I will make use of them here
             double qAvg[4]={0}, tAvg[3]={0};
@@ -436,7 +434,7 @@ int PPF3DDetector::clusterPoses(Pose3D** poseList, int numPoses, std::vector<Pos
 #if defined T_OPENMP
 #pragma omp parallel for
 #endif
-        for (size_t i=0; i<poseClusters.size(); i++)
+        for (int i=0; i < (int)poseClusters.size(); i++)
         {
             // We could only average the quaternions. So I will make use of them here
             double qAvg[4]={0}, tAvg[3]={0};
@@ -505,13 +503,13 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
     float xRange[2], yRange[2], zRange[2];
     computeBboxStd(pc, xRange, yRange, zRange);
     
-    // sample the point cloud: We won't use 
+    // sample the point cloud
     /*float dx = xRange[1] - xRange[0];
     float dy = yRange[1] - yRange[0];
     float dz = zRange[1] - zRange[0];
     float diameter = sqrt ( dx * dx + dy * dy + dz * dz );
     float distanceSampleStep = diameter * RelativeSceneDistance;*/
-    Mat sampled = samplePCByQuantization(pc, xRange, yRange, zRange, (float)RelativeSceneDistance,1);
+    Mat sampled = samplePCByQuantization(pc, xRange, yRange, zRange, (float)RelativeSceneDistance, 0);
     
     // allocate the accumulator : Moved this to the inside of the loop
     /*#if !defined (T_OPENMP)
@@ -554,7 +552,7 @@ void PPF3DDetector::match(const Mat& pc, std::vector<Pose3D*>& results, const do
                 
                 double f[4]={0};
                 computePPFFeatures(p1, n1, p2, n2, f);
-                unsigned int hashValue = hashPPF(f, angle_step, distanceStep);
+                KeyType hashValue = hashPPF(f, angle_step, distanceStep);
                 
                 // we don't need to call this here, as we already estimate the tsg from scene reference point
                 // double alpha = computeAlpha(p1, n1, p2);
