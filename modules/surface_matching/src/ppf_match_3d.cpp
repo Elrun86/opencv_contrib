@@ -128,7 +128,7 @@ PPF3DDetector::PPF3DDetector()
     angle_step = angleStepRadians;
     trained = false;
     
-    SetSearchParams();
+    setSearchParams();
 }
 
 PPF3DDetector::PPF3DDetector(const double RelativeSamplingStep, const double RelativeDistanceStep, const double NumAngles)
@@ -141,10 +141,10 @@ PPF3DDetector::PPF3DDetector(const double RelativeSamplingStep, const double Rel
     angle_step = angleStepRadians;
     trained = false;
     
-    SetSearchParams();
+    setSearchParams();
 }
 
-void PPF3DDetector::SetSearchParams(const int numPoses, const double positionThreshold, const double rotationThreshold, const double minMatchScore, const bool useWeightedClustering)
+void PPF3DDetector::setSearchParams(const int numPoses, const double positionThreshold, const double rotationThreshold, const double minMatchScore, const bool useWeightedClustering)
 {
     NumPoses=numPoses;
     
@@ -230,7 +230,7 @@ PPF3DDetector::~PPF3DDetector()
 }
 
 // TODO: Check all step sizes to be positive
-int PPF3DDetector::trainModel(const Mat &PC)
+void PPF3DDetector::trainModel(const Mat &PC)
 {
     CV_Assert(PC.type() == CV_32F || PC.type() == CV_32FC1);
     
@@ -318,8 +318,6 @@ int PPF3DDetector::trainModel(const Mat &PC)
     //samplingStepRelative = sampling_step_relative;
     sampledPC = sampled;
     trained = true;
-    
-    return 0;
 }
 
 
