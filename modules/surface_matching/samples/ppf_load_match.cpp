@@ -62,7 +62,9 @@ int main(int argc, char** argv)
     std::cout<< "* Surface Matching demonstration : demonstrates the use of surface matching"
              " using point pair features."<<std::endl;
     std::cout<< "* The sample loads a model and a scene, where the model lies in a different"
-             " pose than the training. It then "<<std::endl;
+             " pose than the training. It then trains the model and searches for it in the "
+			 " input scene. The detected poses are further refined by ICP and printed to the"
+			 " standard output."<<std::endl;
     std::cout<< "****************************************************"<<std::endl;
 
     if (argc < 3)
