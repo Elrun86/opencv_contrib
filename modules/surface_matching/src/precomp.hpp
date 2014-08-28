@@ -55,10 +55,10 @@ the use of this software, even if advised of the possibility of such damage.
 #include <fstream>
 #include <iostream>
 
-#if defined (T_OPENMP)
+#if defined (_OPENMP)
 #include<omp.h>
-
 #endif
+
 #include <sstream>  // WTF bananas
 #include "opencv2/flann.hpp"
 
