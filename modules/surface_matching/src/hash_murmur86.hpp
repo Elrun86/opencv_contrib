@@ -14,8 +14,6 @@
 /* We can't use the name 'uint32_t' here because it will conflict with
 * any version provided by the system headers or application. */
 
-#include "hash_murmur.hpp"
-
 /* First look for special cases */
 #if defined(_MSC_VER)
 #define MH_UINT32 unsigned long

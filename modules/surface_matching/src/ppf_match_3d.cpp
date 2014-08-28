@@ -36,7 +36,7 @@
 // or tort (including negligence or otherwise) arising in any way out of
 // the use of this software, even if advised of the possibility of such damage.
 //
-// Author: Tolga Birdal
+// Author: Tolga Birdal <tbirdal AT gmail.com>
 
 #include "precomp.hpp"
 #include "hash_murmur.hpp"

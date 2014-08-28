@@ -36,7 +36,7 @@
 // or tort (including negligence or otherwise) arising in any way out of
 // the use of this software, even if advised of the possibility of such damage.
 //
-// Author: Tolga Birdal
+// Author: Tolga Birdal <tbirdal AT gmail.com>
 
 #ifndef __OPENCV_HASH_MURMUR_HPP_
 #define __OPENCV_HASH_MURMUR_HPP_
@@ -56,8 +56,6 @@ namespace ppf_match_3d
 #define ROTL32(x,y)     _rotl(x,y)
 #define ROTL64(x,y)     _rotl64(x,y)
 
-#define BIG_CONSTANT(x) (x)
-
 #else
 //#define FORCE_INLINE __attribute__((always_inline))
 #define FORCE_INLINE inline static
@@ -69,8 +67,6 @@ inline static long long ROTL64 ( long long x, int8_t r )
 {
     return (x << r) | (x >> (64 - r));
 }
-
-#define BIG_CONSTANT(x) (x##LLU)
 
 #endif // !defined(_MSC_VER)
 
