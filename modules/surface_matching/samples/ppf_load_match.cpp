@@ -36,7 +36,7 @@
 // or tort (including negligence or otherwise) arising in any way out of
 // the use of this software, even if advised of the possibility of such damage.
 //
-// Author: Tolga Birdal <tbirdal AT gmail.com>
+// Author: Tolga Birdal
 
 #include "opencv2/ppf_match_3d.hpp"
 #include <iostream>
@@ -62,9 +62,9 @@ int main(int argc, char** argv)
     std::cout<< "* Surface Matching demonstration : demonstrates the use of surface matching"
              " using point pair features."<<std::endl;
     std::cout<< "* The sample loads a model and a scene, where the model lies in a different"
-             " pose than the training.";
-	std::cout<< " It then trains the model and detects it within the scene. The output poses"
-             " are printed on the screen."<<std::endl;
+             " pose than the training. It then trains the model and searches for it in the "
+			 " input scene. The detected poses are further refined by ICP and printed to the"
+			 " standard output."<<std::endl;
     std::cout<< "****************************************************"<<std::endl;
 
     if (argc < 3)
@@ -81,7 +81,7 @@ int main(int argc, char** argv)
     // Now train the model
     cout << "Training..." << endl;
     int64 tick1 = cv::getTickCount();
-    ppf_match_3d::PPF3DDetector detector(0.03, 0.05);
+	ppf_match_3d::PPF3DDetector detector(0.025, 0.05);
     detector.trainModel(pc);
     int64 tick2 = cv::getTickCount();
     cout << endl << "Training complete in "
@@ -95,7 +95,7 @@ int main(int argc, char** argv)
     cout << endl << "Starting matching..." << endl;
     vector < Pose3D* > results;
     tick1 = cv::getTickCount();
-    detector.match(pcTest, results, 1.0/10.0, 0.05);
+    detector.match(pcTest, results, 1.0/40.0, 0.05);
     tick2 = cv::getTickCount();
     cout << endl << "PPF Elapsed Time " <<
             (tick2-tick1)/cv::getTickFrequency() << " ms" << endl;
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
     vector<Pose3D*> resultsSub(first, last);
 
     // Create an instance of ICP
-    ICP icp(200, 0.001f, 2.5f, 8);
+    ICP icp(150, 0.005f, 2.5f, 8);
     int64 t1 = cv::getTickCount();
 
     // Register for all selected poses
@@ -125,6 +125,15 @@ int main(int argc, char** argv)
         Pose3D* pose = resultsSub[i];
         cout << "Pose Result " << i << endl;
         pose->printPose();
+		if (i==0)
+		{
+		/*	double Pose[16] = {	0.963949, -0.179312, -0.196596, -228.979635,
+								-0.088843, 0.479551, -0.873005, -599.816336,
+								0.250818, 0.858999, 0.446331, -399.746239,
+								0,0,0,1};*/
+			Mat pct = transformPCPose(pc, pose->Pose);
+			writePLY(pct, "C:/Data/para6700PCTrans.ply");
+		}
     }
 
     return 0;
