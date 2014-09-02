@@ -38,9 +38,10 @@
 //
 // Author: Tolga Birdal <tbirdal AT gmail.com>
 
-#ifndef _OPENCV_POSE3D_HPP_
-#define _OPENCV_POSE3D_HPP_
+#ifndef __OPENCV_SURFACE_MATCHING_POSE3D_HPP__
+#define __OPENCV_SURFACE_MATCHING_POSE3D_HPP__
 
+#include "opencv2/core/cvstd.hpp" // cv::Ptr
 #include <vector>
 #include <string>
 
@@ -48,6 +49,13 @@ namespace cv
 {
 namespace ppf_match_3d
 {
+
+class Pose3D;
+typedef Ptr<Pose3D> Pose3DPtr;
+
+class PoseCluster3D;
+typedef Ptr<PoseCluster3D> PoseCluster3DPtr;
+
 /**
 * @class Pose3D
 * @brief Class, allowing the storage of a pose. The data structure stores both
@@ -57,68 +65,67 @@ namespace ppf_match_3d
 */
 class CV_EXPORTS Pose3D
 {
-    public:
-        Pose3D()
-        {
-            alpha=0;
-            modelIndex=0;
-            numVotes=0;
-            residual = 0;
-            
-            for (int i=0; i<16; i++)
-                Pose[i]=0;
-        };
-        
-        Pose3D(double Alpha, unsigned int ModelIndex=0, unsigned int NumVotes=0)
-        {
-            alpha = Alpha;
-            modelIndex = ModelIndex;
-            numVotes = NumVotes;
-            residual=0;
-            
-            for (int i=0; i<16; i++)
-                Pose[i]=0;
-        };
-        
-        
-        /**        
-        *  \brief Updates the pose with the new one        
-        *  \param [in] NewPose New pose to overwrite        
-        */
-        void updatePose(double NewPose[16]);
-        
-        /**        
-        *  \brief Updates the pose with the new one
-        *  \param [in] NewPose New pose to overwrite       
-        */
-        void updatePose(double NewR[9], double NewT[3]);
-        
-        /**        
-        *  \brief Updates the pose with the new one, but this time using quaternions to represent rotation        
-        *  \param [in] NewPose New pose to overwrite        
-        */
-        void updatePoseQuat(double Q[4], double NewT[3]);
-                
-        /**        
-        *  \brief Left multiplies the existing pose in order to update the transformation        
-        *  \param [in] IncrementalPose New pose to apply        
-        */
-        void appendPose(double IncrementalPose[16]);
-        void printPose();
-        
-        Pose3D* clone();
-        
-        int writePose(FILE* f);
-        int readPose(FILE* f);
-        int writePose(const std::string& FileName);
-        int readPose(const std::string& FileName);
-        
-        virtual ~Pose3D() {};
-        
-        double alpha, residual;
-        unsigned int modelIndex;
-        unsigned int numVotes;
-        double Pose[16], angle, t[3], q[4];
+public:
+  Pose3D()
+  {
+    alpha=0;
+    modelIndex=0;
+    numVotes=0;
+    residual = 0;
+
+    for (int i=0; i<16; i++)
+      pose[i]=0;
+  }
+
+  Pose3D(double Alpha, unsigned int ModelIndex=0, unsigned int NumVotes=0)
+  {
+    alpha = Alpha;
+    modelIndex = ModelIndex;
+    numVotes = NumVotes;
+    residual=0;
+
+    for (int i=0; i<16; i++)
+      pose[i]=0;
+  }
+
+  /**
+   *  \brief Updates the pose with the new one
+   *  \param [in] NewPose New pose to overwrite
+   */
+  void updatePose(double NewPose[16]);
+
+  /**
+   *  \brief Updates the pose with the new one
+   *  \param [in] NewPose New pose to overwrite
+   */
+  void updatePose(double NewR[9], double NewT[3]);
+
+  /**
+   *  \brief Updates the pose with the new one, but this time using quaternions to represent rotation
+   *  \param [in] NewPose New pose to overwrite
+   */
+  void updatePoseQuat(double Q[4], double NewT[3]);
+
+  /**
+   *  \brief Left multiplies the existing pose in order to update the transformation
+   *  \param [in] IncrementalPose New pose to apply
+   */
+  void appendPose(double IncrementalPose[16]);
+  void printPose();
+
+  Pose3DPtr clone();
+
+  int writePose(FILE* f);
+  int readPose(FILE* f);
+  int writePose(const std::string& FileName);
+  int readPose(const std::string& FileName);
+
+  virtual ~Pose3D() {}
+
+  double alpha, residual;
+  unsigned int modelIndex;
+  unsigned int numVotes;
+  double pose[16], angle, t[3], q[4];
 };
 
 /**
@@ -129,53 +136,49 @@ class CV_EXPORTS Pose3D
 */
 class CV_EXPORTS PoseCluster3D
 {
-    public:
-        PoseCluster3D()
-        {
-            //poseList.clear();
-            numVotes=0;
-            id=0;
-        };
-        
-        PoseCluster3D(Pose3D* newPose)
-        {
-            //poseList.clear();
-            poseList.push_back(newPose);
-            numVotes=newPose->numVotes;
-            id=0;
-        };
-        
-        PoseCluster3D(Pose3D* newPose, int newId)
-        {
-            //poseList.clear();
-            poseList.push_back(newPose);
-            this->numVotes = newPose->numVotes;
-            this->id = newId;
-        };
-        
-        virtual ~PoseCluster3D()
-        {
-            numVotes=0;
-            id=0;
-            //poseList.clear();
-        };
-        
-		/**        
-        *  \brief Adds a new pose to the cluster. The pose should be "close" to the mean poses
-        *  in order to preserve the consistency
-        *  \param [in] newPose Pose to add to the cluster
-        */
-        void addPose(Pose3D* newPose) ;
-		
-        int writePoseCluster(FILE* f);
-        int readPoseCluster(FILE* f);
-        int writePoseCluster(const std::string& FileName);
-        int readPoseCluster(const std::string& FileName);
-        
-        std::vector < Pose3D* > poseList;
-        int numVotes;
-        int id;
+public:
+  PoseCluster3D()
+  {
+    numVotes=0;
+    id=0;
+  }
+
+  PoseCluster3D(Pose3DPtr newPose)
+  {
+    poseList.clear();
+    poseList.push_back(newPose);
+    numVotes=newPose->numVotes;
+    id=0;
+  }
+
+  PoseCluster3D(Pose3DPtr newPose, int newId)
+  {
+    poseList.push_back(newPose);
+    this->numVotes = newPose->numVotes;
+    this->id = newId;
+  }
+
+  virtual ~PoseCluster3D()
+  {}
+
+  /**
+   *  \brief Adds a new pose to the cluster. The pose should be "close" to the mean poses
+   *  in order to preserve the consistency
+   *  \param [in] newPose Pose to add to the cluster
+   */
+  void addPose(Pose3DPtr newPose);
+
+  int writePoseCluster(FILE* f);
+  int readPoseCluster(FILE* f);
+  int writePoseCluster(const std::string& FileName);
+  int readPoseCluster(const std::string& FileName);
+
+  std::vector<Pose3DPtr> poseList;
+  int numVotes;
+  int id;
 };
+
+
 } // namespace ppf_match_3d
 } // namespace cv
 

@@ -294,7 +294,6 @@ uint32_t PMurHash32(uint32_t seed, const void *key, int len)
 
 void hashMurmurx86 ( const void * key, const int len, const unsigned int seed, void * out )
 {
-    const unsigned long tempSeed = (unsigned long)seed;
     *(unsigned int*)out = PMurHash32 (seed, key, len);
 }
 

@@ -42,8 +42,8 @@ the use of this software, even if advised of the possibility of such damage.
 #ifndef __OPENCV_SURFACE_MATCHING_PRECOMP_HPP__
 #define __OPENCV_SURFACE_MATCHING_PRECOMP_HPP__
 
-#include "opencv2/ppf_match_3d.hpp"
-#include "opencv2/icp.hpp"
+#include "opencv2/surface_matching/ppf_match_3d.hpp"
+#include "opencv2/surface_matching/icp.hpp"
 #include "opencv2/surface_matching/ppf_helpers.hpp"
 
 #include <string>
@@ -54,12 +54,13 @@ the use of this software, even if advised of the possibility of such damage.
 
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 #if defined (_OPENMP)
 #include<omp.h>
 #endif
 
-#include <sstream>  // WTF bananas
+#include <sstream>  // flann dependency, needed in precomp now
 #include "opencv2/flann.hpp"
 
 #include "c_utils.hpp"
